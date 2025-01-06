@@ -1,45 +1,50 @@
-1. Contract Name: SimpleDataLocations
+1. Contract Name: DataLocations
 
-2. State Variable:
-    - numbers: An array of integers stored persistently.
+2. State Variables:
+    - arr: A dynamic array of integers, stored in persistent storage and accessible publicly.
+    - map: A mapping that associates integers (keys) with addresses (values), stored in persistent storage.
+    - myStructs: A mapping that associates integers (keys) with custom structs (MyStruct), stored in persistent storage.
 
-3. Functions:
+3. Struct Definition:
+    - MyStruct:
+        - foo: An integer property of the struct.
 
-    3.1 Add a Number to the Array:
-        INPUT: number (integer)
-        ACTION: Append number to the end of the `numbers` array.
+4. Functions:
 
-    3.2 Update the First Number in the Array:
-        INPUT: newNumber (integer)
-        ACTION:
-            IF the `numbers` array is not empty:
-                Update the first element of `numbers` to newNumber.
-            ELSE:
-                Do nothing.
+    4.1 Public Function `f`:
+        INPUT: None
+        ACTIONS:
+            - Call an internal function `_f` and pass:
+                - arr (storage array),
+                - map (storage mapping),
+                - myStructs[1] (a specific struct from the mapping in storage).
+            - Access a struct `myStruct` from the `myStructs` mapping in storage.
+            - Create a new instance of `MyStruct` in memory with `foo` initialized to 0.
 
-    3.3 Double a Memory Array and Return It:
-        INPUT: inputArray (array of integers in temporary memory)
-        OUTPUT: doubledArray (array of integers in memory)
-        ACTION:
-            Create a new array `doubledArray` with the same length as `inputArray`.
-            FOR each element in `inputArray`:
-                Multiply the element by 2 and store it in `doubledArray`.
-            RETURN `doubledArray`.
+    4.2 Internal Function `_f`:
+        INPUT:
+            - _arr: Reference to a storage array.
+            - _map: Reference to a storage mapping.
+            - _myStruct: Reference to a storage struct.
+        ACTION: Perform operations on the passed storage references (details not provided).
 
-    3.4 Sum Up a Calldata Array:
-        INPUT: inputArray (array of integers in read-only calldata)
-        OUTPUT: sum (integer)
-        ACTION:
-            Initialize `sum` to 0.
-            FOR each element in `inputArray`:
-                Add the element to `sum`.
-            RETURN `sum`.
+    4.3 Public Function `g`:
+        INPUT:
+            - _arr: A dynamic array passed in memory (temporary, modifiable within the function).
+        OUTPUT:
+            - Returns a dynamic array from memory.
+        ACTION: Perform operations on the input array and return a modified array.
 
-4. Key Concepts:
-    - `storage`: Persistent storage for state variables (e.g., `numbers`).
-    - `memory`: Temporary storage for function-local computations.
-    - `calldata`: Read-only storage for external function inputs.
-    - Function Modifiers:
-        - `public`: Functions accessible inside and outside the contract.
-        - `external`: Functions accessible only from outside the contract.
-        - `pure`: Functions that neither read nor modify state variables.
+    4.4 External Function `h`:
+        INPUT:
+            - _arr: A dynamic array passed in calldata (read-only and gas-efficient).
+        ACTION: Perform operations on the input array without modifying it.
+
+5. Key Concepts Demonstrated:
+    - `storage`: Used for persistent variables (`arr`, `map`, and `myStructs`).
+    - `memory`: Used for temporary, modifiable variables (`_arr` in `g` and `myMemStruct` in `f`).
+    - `calldata`: Used for read-only, gas-efficient function inputs (`_arr` in `h`).
+    - Visibility Modifiers:
+        - `public`: Allows functions to be called internally or externally.
+        - `external`: Allows functions to be called only from outside the contract.
+        - `internal`: Allows functions to be called only within the contract or its derived contracts.
