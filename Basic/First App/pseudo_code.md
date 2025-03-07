@@ -14,6 +14,6 @@
 5. DEFINE a function `dec`
    a. MARK function as public
    b. DECREMENT the value of `count` by 1
-      i. NOTE: This function will fail if `count` is 0 (underflow check applies in Solidity 0.8.x and later)
+   i. NOTE: This function will fail if `count` is 0 (underflow check applies in Solidity 0.8.x and later)
 
 6. END
