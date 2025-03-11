@@ -1,45 +1,47 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+// SPDX-License-Identifier: MIT              // License identifier indicating open-source status.
+pragma solidity ^0.8.26;                     // Specifies the Solidity compiler version.
 
 contract Enum {
-    // Define an enumeration called Status that represents different shipping statuses.
-    // Enumerations in Solidity are a way to create user-defined types with a finite set of values.
+    // Define an enum named 'Status' representing the shipping status of an item.
+    // Enums in Solidity allow you to create a user-defined type with a finite set of values.
     enum Status {
-        Pending,    // 0 - The default status, indicating the shipping process hasn't started.
-        Shipped,    // 1 - Indicates that the item has been shipped.
-        Accepted,   // 2 - Indicates that the item has been received and accepted.
-        Rejected,   // 3 - Indicates that the item has been received but rejected.
-        Canceled    // 4 - Indicates that the shipping process was canceled.
+        Pending,   // 0: The default state, indicating the item is pending shipment.
+        Shipped,   // 1: The item has been shipped.
+        Accepted,  // 2: The item has been accepted by the recipient.
+        Rejected,  // 3: The item was rejected.
+        Canceled   // 4: The shipment has been canceled.
     }
 
-    // Declare a state variable 'status' of type Status.
-    // By default, this variable is initialized to the first element in the enum, which is 'Pending'.
+    // Declare a public state variable 'status' of type 'Status'.
+    // Since enums default to the first element, 'status' is initially set to 'Pending' (0).
     Status public status;
 
-    // Function: get
-    // This function is a public view function that returns the current value of the status variable.
-    // Since enums are represented as uint under the hood:
-    // Pending  - 0, Shipped  - 1, Accepted - 2, Rejected - 3, Canceled - 4.
+    // Function to get the current shipping status.
+    // Although the function returns an enum type, under the hood it corresponds to a uint value.
+    // For example:
+    //  - Pending  is 0
+    //  - Shipped  is 1
+    //  - Accepted is 2
+    //  - Rejected is 3
+    //  - Canceled is 4
     function get() public view returns (Status) {
         return status;
     }
 
-    // Function: set
-    // This function allows updating the 'status' state variable.
-    // It takes an input of type Status and sets the state variable 'status' to this value.
+    // Function to update the shipping status.
+    // It accepts a parameter of type 'Status' and assigns it to the state variable 'status'.
     function set(Status _status) public {
         status = _status;
     }
 
-    // Function: cancel
-    // This function provides a convenient way to set the status to 'Canceled' directly.
+    // Function to update the status to a specific value, 'Canceled'.
+    // This demonstrates that you can set an enum value directly using its name.
     function cancel() public {
         status = Status.Canceled;
     }
 
-    // Function: reset
-    // This function resets the 'status' variable to its default value.
-    // The 'delete' keyword resets the variable to its default value, which is the first element in the enum (Pending, or 0).
+    // Function to reset the status.
+    // The 'delete' keyword resets the variable to its default value, which is the first value in the enum ('Pending').
     function reset() public {
         delete status;
     }
