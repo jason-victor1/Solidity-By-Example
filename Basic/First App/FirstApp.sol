@@ -1,29 +1,30 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+// 🪪 This is like your contract’s legal license plate.
+// The MIT license allows others to use, modify, and share the code freely.
 
-// This is a simple Counter contract that allows users to view, increment, and decrement a counter.
+pragma solidity ^0.8.26;
+// 🛠️ Specifies the version of the builder's toolkit (Solidity compiler) to use.
+// Version 0.8.26 ensures safety features like automatic underflow protection.
 
 contract Counter {
-    // State variable to store the current count
+    // 🧮 This is like a public scoreboard placed on the wall of a digital room.
+    // It keeps track of a number (like how many people entered or how many times something happened).
     uint256 public count;
 
-    // Function to get the current value of the count
-    // This is a view function that does not modify the state.
-    // @return uint256 - The current value of the count.
+    // 🪟 A public window anyone can look through to see the current score.
+    // This function doesn’t change anything—it just returns the current value.
     function get() public view returns (uint256) {
         return count;
     }
 
-    // Function to increment the count by 1
-    // This modifies the state by increasing the count variable.
+    // 🔼 This button increases the number on the scoreboard by 1.
+    // Anyone can press it to increment the counter.
     function inc() public {
         count += 1;
     }
 
-    // Function to decrement the count by 1
-    // This modifies the state by decreasing the count variable.
-    // Note: This could potentially underflow in earlier Solidity versions,
-    // but underflow is prevented in Solidity >= 0.8.0.
+    // 🔽 This button decreases the number on the scoreboard by 1.
+    // Solidity 0.8+ ensures it won't break by going below zero (no negative scores allowed).
     function dec() public {
         count -= 1;
     }
