@@ -1,25 +1,26 @@
-// SPDX-License-Identifier: MIT           // License identifier indicating the code is open-source.
-pragma solidity ^0.8.26;                  // Specifies the Solidity version required to compile this contract.
+// SPDX-License-Identifier: MIT
+// 🪪 This is the license plate for the contract—declares it open-source under the MIT License.
 
+pragma solidity ^0.8.26;
+// 🛠️ Specifies the builder toolkit version (Solidity v0.8.26) to ensure compatibility and safety.
+
+// 🏢 This contract is like a digital storage booth named "SimpleStorage" where visitors can update and check a number.
 contract SimpleStorage {
-    // State variable 'num' is declared as a public unsigned integer (uint256).
-    // This variable is stored on the blockchain and holds a numeric value.
+    // 🧮 This is a number board displayed outside the booth.
+    // It's a public variable, so anyone can read it.
     uint256 public num;
 
-    // The 'set' function allows anyone to change the value of 'num'.
-    // Since writing to the blockchain (i.e., modifying state) requires a transaction,
-    // you must send a transaction to call this function.
+    // 🛎️ This is like a request counter that lets visitors update the number on the board.
+    // Since changing something in the building costs effort (gas), this action requires a transaction.
     function set(uint256 _num) public {
-        // The input parameter '_num' is assigned to the state variable 'num',
-        // updating the stored value.
+        // ✍️ The visitor hands in a number (_num), and the clerk updates the public display with it.
         num = _num;
     }
 
-    // The 'get' function allows anyone to read the current value of 'num'.
-    // It is marked as 'view' because it does not modify the state and only reads from it.
-    // Calling this function does not require a transaction (and thus no gas cost).
+    // 🪟 This is a read-only viewing window—visitors can look at the number without changing anything.
+    // No gas is needed to peek through this window.
     function get() public view returns (uint256) {
-        // Returns the current value of the state variable 'num'.
+        // 🧾 The clerk simply reads out the number currently displayed on the board.
         return num;
     }
 }
