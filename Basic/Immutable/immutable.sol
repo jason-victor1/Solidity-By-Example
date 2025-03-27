@@ -1,23 +1,27 @@
-// SPDX-License-Identifier: MIT          // License identifier for open-source compliance.
-pragma solidity ^0.8.26;                  // Specifies that the source code is written for Solidity version 0.8.26.
+// SPDX-License-Identifier: MIT
+// 🪪 This is your contract’s license plate—declares it open-source under MIT terms.
 
-// Define a contract named "Immutable"
+pragma solidity ^0.8.26;
+// 🛠️ Sets the version of Solidity tools used to build this contract.
+// Version 0.8.26 includes important safety features.
+
+
+// 🏢 You're constructing a digital building named "Immutable".
+// Some labels (immutable variables) are installed once during setup and locked in permanently.
 contract Immutable {
-    // Declare an immutable public variable of type address.
-    // 'immutable' means that the value can be set only once during the contract's construction.
+    // 🧱 This is like installing a nameplate at the entrance—set during construction and never changed after.
     address public immutable myAddr;
-    
-    // Declare an immutable public variable of type uint256.
-    // This variable is also only set during contract construction.
+
+    // 🏷️ This is like stamping a custom serial number into the foundation of the building.
     uint256 public immutable myUint;
-    
-    // Constructor function: runs once when the contract is deployed.
-    // It accepts a uint256 value which is used to initialize myUint.
+
+    // 🛬 This constructor runs once when the building is first assembled (contract is deployed).
+    // The deployer provides a number and becomes the permanent listed owner.
     constructor(uint256 _myUint) {
-        // Set myAddr to the address that deploys the contract (msg.sender).
+        // 👤 Assigns the deployer's address as the contract’s registered owner.
         myAddr = msg.sender;
-        
-        // Set myUint to the value provided as an argument to the constructor.
+
+        // 🔢 Records the custom number chosen at deployment and locks it in.
         myUint = _myUint;
     }
 }
