@@ -1,22 +1,25 @@
-1. **START**
+1. 🏗️ START building a digital testing facility (smart contract) to explore how fuel (gas) is consumed in Ethereum.
 
-2. **DEFINE** a contract named `Gas`
+2. 🏷️ Name the building:
+   DEFINE a contract called "Gas"
+   // Think of this place as a workshop for understanding how much gas (energy) your contract actions consume.
 
-3. **DECLARE state variables** (stored on the blockchain):
-   a. `i` - a public unsigned integer initialized to `0`
+3. 🪧 DECLARE a public state variable `i` initialized to 0
+   // This is like a visible counter on the wall that tracks how many times an action is performed.
 
-4. **DEFINE a function `forever`**:
-   a. MARK the function as public.
-   b. EXPLAIN the purpose of the function:
-   i. Demonstrates gas exhaustion by running an infinite loop.
-   c. START an infinite loop:
-   i. INCREMENT the state variable `i` by `1` in each iteration.
-   d. END the loop (this line is unreachable due to the infinite nature of the loop).
+4. 🔁 DEFINE a function `forever`:
+   a. 📢 MARK the function as public—any visitor can start this test.
+   b. 🎯 PURPOSE: To demonstrate what happens when you run out of fuel (gas) by launching a never-ending process.
+   c. 🌀 START an infinite loop:
+   i. ➕ Each cycle, increment the wall counter `i` by 1
+   // Like a machine that keeps clicking up the number with every spin—nonstop.
 
-5. **EXPLAIN the behavior of the `forever` function**:
-   a. IF gas is exhausted:
-   i. The transaction fails.
-   ii. All state changes (e.g., `i` updates) are reverted.
-   b. NOTE: Gas used before the failure is not refunded.
+   d. 🛑 END of loop (theoretically unreachable since the machine never stops)
 
-6. **END**
+5. 💥 EXPLAIN what happens when someone triggers the `forever` function:
+   a. 🧯 IF gas (fuel) runs out:
+   i. ❌ The transaction fails like a machine stalling out due to running dry.
+   ii. 🔄 All updates to the counter (`i`) are rolled back—it's like nothing ever happened.
+   b. 🚫 NOTE: Any gas already burned is **not** refunded—fuel spent, even in failure, is gone.
+
+6. 🏁 END setup of the Gas demo lab.
