@@ -1,26 +1,34 @@
 // SPDX-License-Identifier: MIT
+// 🪪 This is like giving your smart contract a license to operate under open-source rules.
+// The MIT license allows others to use and remix your code freely.
+
 pragma solidity ^0.8.26;
+// 🛠️ This sets the version of the toolbox we’re using to build this contract—v0.8.26 includes safety features and bug fixes.
 
-// This contract demonstrates the usage of state variables, local variables, and global variables.
-
+// 🏢 This contract is like a digital room named "Variables" that holds permanent signs and temporary notes.
 contract Variables {
-    // State variables are stored on the blockchain and persist across function calls.
+    // 🪧 State variables = permanent signs on the wall of this room (stored on the blockchain)
+    // These remain unchanged unless someone actively updates them.
 
-    // A public state variable to store a string.
-    // The value is accessible to anyone and can be read externally.
+    // 📝 A visible message board that always says "Hello"
     string public text = "Hello";
 
-    // A public state variable to store an unsigned integer.
+    // 🔢 A public number display that starts at 123
     uint256 public num = 123;
 
-    // Function to demonstrate the use of local and global variables.
+    // 🛎️ This function is like a guest interaction desk.
+    // It doesn't change anything in the room—it just checks or uses information temporarily during a visitor's session.
     function doSomething() public view {
-        // Local variables are declared inside functions and are not saved to the blockchain.
-        uint256 i = 456; // A local variable storing an unsigned integer.
+        // 🧾 This is like scribbling a quick note during a meeting—it disappears afterward.
+        uint256 i = 456;
 
-        // Global variables are special variables provided by Solidity that contain information about the blockchain.
+        // 🌍 Now we use global tools—Solidity’s built-in information sources.
 
-        uint256 timestamp = block.timestamp; // Stores the current block's timestamp.
-        address sender = msg.sender; // Stores the address of the caller of this function.
+        // 🕒 "timestamp" is like stamping the guest's check-in time at the front desk.
+        uint256 timestamp = block.timestamp;
+
+        // 👤 "sender" is like writing down who the visitor is (their wallet address).
+        address sender = msg.sender;
     }
 }
+
