@@ -1,28 +1,32 @@
-// SPDX-License-Identifier: MIT              // License identifier indicating open-source status.
-pragma solidity ^0.8.26;                     // Specifies the Solidity compiler version.
+// SPDX-License-Identifier: MIT
+// 🪪 This is the license plate that says this contract is open-source under the MIT license.
 
+pragma solidity ^0.8.26;
+// 🛠️ Declares the version of the toolkit used to build this contract (Solidity v0.8.26).
+
+// 🏢 This contract is like a digital currency measurement booth, showcasing Ether units and verifying their values.
 contract EtherUnits {
-    // Declare a public state variable 'oneWei' and initialize it to 1 wei.
-    // 'wei' is the smallest denomination of Ether.
+    // 🪙 "oneWei" is like pinning the tiniest coin on the wall, representing the smallest Ethereum unit.
+    // It's public, so anyone can come by and see what 1 wei looks like.
     uint256 public oneWei = 1 wei;
-    
-    // Declare a boolean variable 'isOneWei' that checks if oneWei is equal to 1.
-    // This will be true because 1 wei is exactly equal to 1.
+
+    // ✅ This is like a checklist right next to the tiny coin:
+    // "Does it really equal 1?" Yes—this returns true.
     bool public isOneWei = (oneWei == 1);
 
-    // Declare a public state variable 'oneGwei' and initialize it to 1 gwei.
-    // 1 gwei is defined as 10^9 wei.
+    // 💰 "oneGwei" is a larger coin on display—1 Gwei is 1 billion wei (10^9).
     uint256 public oneGwei = 1 gwei;
-    
-    // Declare a boolean variable 'isOneGwei' that checks if oneGwei is equal to 1e9 (10^9).
-    // This comparison validates the conversion: 1 gwei equals 1,000,000,000 wei.
+
+    // ✅ Another checklist asking:
+    // "Is this big coin really worth 1,000,000,000 wei?" This confirms it by returning true.
     bool public isOneGwei = (oneGwei == 1e9);
 
-    // Declare a public state variable 'oneEther' and initialize it to 1 ether.
-    // 1 ether is defined as 10^18 wei.
+    // 🏦 "oneEther" is like a gold bar in a glass case—1 Ether equals 10^18 wei.
     uint256 public oneEther = 1 ether;
-    
-    // Declare a boolean variable 'isOneEther' that checks if oneEther is equal to 1e18 (10^18).
-    // This comparison confirms that 1 ether equals 1,000,000,000,000,000,000 wei.
+
+    // ✅ Final checklist to confirm:
+    // "Does this gold bar weigh exactly 1,000,000,000,000,000,000 wei?" Verified true.
     bool public isOneEther = (oneEther == 1e18);
 }
+
+//check logic file

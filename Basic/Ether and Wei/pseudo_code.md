@@ -1,11 +1,27 @@
-1. **START**
+1. 🏗️ START setting up a digital currency measurement booth (smart contract).
 
-2. **DEFINE** a contract named `EtherUnits`
-   a. **DECLARE** a public state variable `oneWei` of type unsigned integer and assign it the value for 1 wei  
-   b. **DECLARE** a public boolean variable `isOneWei` that checks if `oneWei` equals 1  
-   c. **DECLARE** a public state variable `oneGwei` of type unsigned integer and assign it the value for 1 gwei (10^9 wei)  
-   d. **DECLARE** a public boolean variable `isOneGwei` that checks if `oneGwei` equals 1e9  
-   e. **DECLARE** a public state variable `oneEther` of type unsigned integer and assign it the value for 1 ether (10^18 wei)  
-   f. **DECLARE** a public boolean variable `isOneEther` that checks if `oneEther` equals 1e18
+2. 🏷️ Name the booth:
+   DEFINE a contract called "EtherUnits"
+   // Think of this as a place that explains and verifies Ethereum’s unit system—like a crypto metric conversion center.
 
-3. **END**
+   a. 🪙 DECLARE a public label "oneWei" to represent the smallest Ethereum unit (1 wei)
+   // Like pinning a tiny coin on the wall labeled "1 wei"
+
+   b. ✅ DECLARE a public checklist item "isOneWei" that checks if "oneWei" really equals 1
+   // Like asking: "Does this smallest coin really have a value of 1?" and showing a green check or red X
+
+   c. 💰 DECLARE a public label "oneGwei" to represent 1 Gwei (1 billion wei)
+   // Think of this as a larger coin labeled "1 Gwei" which is worth 1,000,000,000 wei
+
+   d. ✅ DECLARE a public checklist item "isOneGwei" that confirms if "oneGwei" equals 1e9
+   // Like a scale test: "Does this big coin actually weigh 1 billion wei?"
+
+   e. 🏦 DECLARE a public label "oneEther" to represent the largest everyday Ethereum unit (1 Ether = 10^18 wei)
+   // This is like placing a golden bar labeled “1 ETH” on display—equal to one quintillion wei
+
+   f. ✅ DECLARE a public checklist item "isOneEther" that checks if "oneEther" equals 1e18
+   // Another test station: “Does this giant gold bar weigh exactly 10^18 wei?”
+
+3. 🏁 END the configuration of the EtherUnits booth.
+
+//check logic file
