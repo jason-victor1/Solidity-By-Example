@@ -1,45 +1,37 @@
 // SPDX-License-Identifier: MIT
-// Specifies the license type for the contract, required for open-source compliance.
+// 🪪 This license plate declares the contract as open-source under the MIT License.
 
 pragma solidity ^0.8.26;
+// 🛠️ This specifies which version of the Solidity builder toolkit to use—v0.8.26 or compatible updates.
 
-// Declares the Solidity compiler version required to compile this contract.
-// ^0.8.26 means this contract is compatible with version 0.8.26 and later patch versions.
-
+// 🧠 You're setting up a decision-making booth called "IfElse"
+// It gives different responses based on the number visitors bring.
 contract IfElse {
-    // Defines a new contract named "IfElse".
 
+    // 🛎️ This is like a series of decision gates.
+    // The "foo" function checks your input and returns a specific number as a result.
+    // It's "pure" because it doesn’t touch or change anything outside—like a sealed testing chamber.
     function foo(uint256 x) public pure returns (uint256) {
-        // A public function named "foo" that takes an unsigned integer `x` as input
-        // and returns an unsigned integer. It is marked as `pure` because it does not
-        // read or modify the blockchain state.
-
+        // 🧪 Step 1: Is the input less than 10? If so, return 0.
         if (x < 10) {
-            // If the input `x` is less than 10, return 0.
             return 0;
-        } else if (x < 20) {
-            // If the input `x` is between 10 (inclusive) and 20 (exclusive), return 1.
+        } 
+        // 🧪 Step 2: If not, is it under 20? If so, return 1.
+        else if (x < 20) {
             return 1;
-        } else {
-            // If the input `x` is 20 or greater, return 2.
+        } 
+        // 🧪 Step 3: If it's 20 or more, return 2.
+        else {
             return 2;
         }
     }
 
+    // ⚡ A more compact switchboard version of the same logic.
+    // "ternary" function is a quick check—like flipping a toggle switch.
     function ternary(uint256 _x) public pure returns (uint256) {
-        // A public function named "ternary" that takes an unsigned integer `_x` as input
-        // and returns an unsigned integer. It is also marked as `pure`.
-
-        // The below commented-out code is the standard if/else equivalent:
-        // if (_x < 10) {
-        //     return 1;
-        // }
-        // return 2;
-
-        // Shorthand way to write the above if/else statement using the ternary operator.
-        // The "?" operator is the ternary operator, which acts as a concise if/else.
-
+        // 🧮 The ternary operator is a shortcut: 
+        // If `_x` is under 10, return 1. Otherwise, return 2.
         return _x < 10 ? 1 : 2;
-        // If `_x` is less than 10, return 1. Otherwise, return 2.
     }
 }
+
