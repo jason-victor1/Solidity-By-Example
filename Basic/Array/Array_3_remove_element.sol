@@ -1,46 +1,44 @@
-// SPDX-License-Identifier: MIT              // License identifier indicating open-source status.
-pragma solidity ^0.8.26;                     // Specifies the Solidity compiler version to be used.
+// SPDX-License-Identifier: MIT
+// 🪪 Declares this contract as open-source under the MIT License.
 
+pragma solidity ^0.8.26;
+// 🛠️ Specifies the version of the Solidity compiler to ensure compatibility and security.
+
+// 🏢 This contract is a smart storage room where you can quickly remove boxes from shelves by replacing them with the last one.
 contract ArrayReplaceFromEnd {
-    // Dynamic array 'arr' of unsigned integers.
+    // 📦 Dynamic shelf (array) holding numbered boxes (uint256).
     uint256[] public arr;
 
-    // Function to remove an element at a specific index by replacing it with the last element.
-    // This technique keeps the array compact without leaving a gap.
+    // ❌ This function removes a box at a given position by replacing it with the last box on the shelf.
+    // 💡 It's faster than shifting everything left—ideal when order doesn't matter.
     function remove(uint256 index) public {
-        // Replace the element at the given index with the last element in the array.
-        // This effectively "overwrites" the element to be removed.
+        // 🔄 Take the last box and use it to overwrite the one at 'index'.
         arr[index] = arr[arr.length - 1];
 
-        // Remove the last element of the array, which is now a duplicate.
-        // The pop() function reduces the array length by 1.
+        // ✂️ Remove the last (now duplicated) box to keep the shelf clean.
         arr.pop();
     }
 
-    // Test function to demonstrate and verify the removal logic.
+    // 🧪 A demo to show and test how this removal method works in practice.
     function test() public {
-        // Initialize the array with four elements.
+        // 🧰 Start with a shelf of 4 boxes labeled: [1, 2, 3, 4]
         arr = [1, 2, 3, 4];
 
-        // Remove the element at index 1 (value 2).
-        // The last element (4) is moved to index 1, resulting in the array: [1, 4, 3, 4]
-        // Then, pop() removes the last element, yielding: [1, 4, 3]
+        // ❌ Remove the box at index 1 (value 2).
+        // 📦 Replace it with the last box (4), so it becomes: [1, 4, 3, 4]
+        // ✂️ Then cut off the duplicate last box → [1, 4, 3]
         remove(1);
-        // Check that the array length is now 3.
-        assert(arr.length == 3);
-        // Verify the updated array values.
-        assert(arr[0] == 1);   // First element remains unchanged.
-        assert(arr[1] == 4);   // Second element is replaced by the former last element.
-        assert(arr[2] == 3);   // Third element remains unchanged.
+        assert(arr.length == 3);  // Confirm one box was removed
+        assert(arr[0] == 1);      // Original first box still in place
+        assert(arr[1] == 4);      // Index 1 now holds what used to be at the end
+        assert(arr[2] == 3);      // Index 2 still has original value
 
-        // Remove the element at index 2 (value 3) from the current array [1, 4, 3].
-        // The last element (3) is moved to index 2, but since it's already there, the array remains [1, 4, 3],
-        // and then pop() removes the last element, resulting in: [1, 4]
+        // ❌ Remove box at index 2 (which currently holds 3)
+        // Last box is also 3, so replacement makes no visible change
+        // ✂️ pop() trims the last item → shelf becomes: [1, 4]
         remove(2);
-        // Check that the array length is now 2.
-        assert(arr.length == 2);
-        // Verify the updated array values.
-        assert(arr[0] == 1);   // First element remains unchanged.
-        assert(arr[1] == 4);   // Second element remains unchanged.
+        assert(arr.length == 2);  // Confirm another box was removed
+        assert(arr[0] == 1);
+        assert(arr[1] == 4);
     }
 }
