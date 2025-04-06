@@ -1,47 +1,45 @@
-// SPDX-License-Identifier: MIT              // License identifier indicating open-source status.
-pragma solidity ^0.8.26;                     // Specifies the Solidity compiler version.
+// SPDX-License-Identifier: MIT
+// 🪪 Declares this smart contract is open-source under the MIT License.
 
+pragma solidity ^0.8.26;
+// 🛠️ Uses Solidity version 0.8.26 to compile this contract.
+
+// 📦 This contract is a digital package tracker.
+// It attaches status tags to shipments and allows reading or updating those tags.
 contract Enum {
-    // Define an enum named 'Status' representing the shipping status of an item.
-    // Enums in Solidity allow you to create a user-defined type with a finite set of values.
+    // 🏷️ Define a tag menu (enum) called 'Status' with five possible labels for a package.
     enum Status {
-        Pending,   // 0: The default state, indicating the item is pending shipment.
-        Shipped,   // 1: The item has been shipped.
-        Accepted,  // 2: The item has been accepted by the recipient.
-        Rejected,  // 3: The item was rejected.
-        Canceled   // 4: The shipment has been canceled.
+        Pending,   // 🕓 0: Package is waiting to be shipped
+        Shipped,   // 📦 1: Package is on its way
+        Accepted,  // ✅ 2: Package was received
+        Rejected,  // ❌ 3: Delivery was refused
+        Canceled   // 🚫 4: Shipment was canceled
     }
 
-    // Declare a public state variable 'status' of type 'Status'.
-    // Since enums default to the first element, 'status' is initially set to 'Pending' (0).
+    // 🏷️ This variable holds the current tag for the package.
+    // It's public, so anyone can check the status.
+    // By default, this tag is set to 'Pending' (index 0).
     Status public status;
 
-    // Function to get the current shipping status.
-    // Although the function returns an enum type, under the hood it corresponds to a uint value.
-    // For example:
-    //  - Pending  is 0
-    //  - Shipped  is 1
-    //  - Accepted is 2
-    //  - Rejected is 3
-    //  - Canceled is 4
+    // 🪟 Lets you peek at the current tag on the package.
+    // Although enums return names, under the hood they map to numbers (0–4).
     function get() public view returns (Status) {
         return status;
     }
 
-    // Function to update the shipping status.
-    // It accepts a parameter of type 'Status' and assigns it to the state variable 'status'.
+    // ✍️ This function allows you to change the tag by picking a new one from the menu.
+    // You provide a new tag (`_status`) and it replaces the current one.
     function set(Status _status) public {
         status = _status;
     }
 
-    // Function to update the status to a specific value, 'Canceled'.
-    // This demonstrates that you can set an enum value directly using its name.
+    // 🚫 A shortcut function that tags the package as 'Canceled'—no input needed.
     function cancel() public {
         status = Status.Canceled;
     }
 
-    // Function to reset the status.
-    // The 'delete' keyword resets the variable to its default value, which is the first value in the enum ('Pending').
+    // 🔄 This function removes the current tag and resets it to the default ('Pending').
+    // It's like wiping off a sticker and reapplying the "Waiting to Ship" label.
     function reset() public {
         delete status;
     }
