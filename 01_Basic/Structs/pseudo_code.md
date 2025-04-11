@@ -1,43 +1,48 @@
-1. START
+1. 🏗️ START setting up a digital task board for personal or shared to-do tracking.
 
-2. DEFINE a contract named `Todos`
+2. 🏷️ DEFINE a contract named "Todos"
+   // This is like creating a virtual workspace where tasks can be added, viewed, and marked complete.
 
-3. DECLARE state variables (stored on the blockchain):
-   a. `todos` - a public dynamic array of structs `Todo`
-      i. Each `Todo` contains:
-         - `text` - a string to store the task description
-         - `completed` - a boolean to store the completion status of the task
+3. 🗂️ DECLARE state variables:
+   a. "todos" - a public dynamic list of "Todo" task cards
+   i. Each task card includes: - 📝 `text` – the description of the task (like writing "Buy groceries") - ✅ `completed` – a checkbox to track if the task is done or not
 
-4. DEFINE a function `create`
-   a. MARK function as public
-   b. ACCEPT a parameter `_text` of type `string`
-   c. PUSH a new `Todo` struct into the `todos` array with:
-      i. `text` = `_text`
-      ii. `completed` = `false`
+4. 🆕 DEFINE a function "create":
+   a. 🔓 Publicly accessible
+   b. 📥 Accepts a string `_text` for the task description
+   c. ➕ Adds a new task card (`Todo`) to the board with:
 
-5. DEFINE a function `get`
-   a. MARK function as public and view
-   b. ACCEPT a parameter `_index` of type `uint256`
-   c. RETURN:
-      i. `text` - the task description of the `Todo` at `_index`
-      ii. `completed` - the completion status of the `Todo` at `_index`
+   - `text` = `_text`
+   - `completed` = `false` (the checkbox is initially unchecked)
 
-6. DEFINE a function `updateText`
-   a. MARK function as public
-   b. ACCEPT parameters `_index` of type `uint256` and `_text` of type `string`
-   c. ACCESS the `Todo` at `_index` in the `todos` array
-   d. UPDATE the `text` field of the `Todo` to `_text`
+5. 🔍 DEFINE a function "get":
+   a. 🔓 Public and view-only (read-only)
+   b. 📥 Accepts an index `_index` to look up a specific task
+   c. 📦 Returns:
 
-7. DEFINE a function `toggleCompleted`
-   a. MARK function as public
-   b. ACCEPT a parameter `_index` of type `uint256`
-   c. ACCESS the `Todo` at `_index` in the `todos` array
-   d. TOGGLE the `completed` field of the `Todo`:
-      i. IF `completed` is `true`, set it to `false`
-      ii. ELSE, set it to `true`
+   - The task text (`text`)
+   - The checkbox status (`completed`)
 
-8. DEFINE a function `getTodosLength`
-   a. MARK function as public and view
-   b. RETURN the length of the `todos` array (number of tasks)
+6. ✏️ DEFINE a function "updateText":
+   a. 🔓 Public
+   b. 📥 Accepts:
 
-9. END
+   - `_index` – which task to update
+   - `_text` – the new description
+     c. 📝 Access the specified task card
+     d. ✍️ Update its `text` to the new message
+
+7. 🔁 DEFINE a function "toggleCompleted":
+   a. 🔓 Public
+   b. 📥 Accepts the task index (`_index`)
+   c. ☑️ Access the task card
+   d. 🔄 Flip the checkbox:
+
+   - If it's checked (`true`), uncheck it (`false`)
+   - If it's unchecked, check it
+
+8. 📊 DEFINE a function "getTodosLength":
+   a. 🔓 Public and view-only
+   b. 🔢 Returns the number of tasks on the board (length of `todos` array)
+
+9. 🏁 END the setup for this interactive task board
