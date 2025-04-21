@@ -1,47 +1,60 @@
 // SPDX-License-Identifier: MIT
+// 🪪 Declares this contract as open-source under the MIT license.
+
 pragma solidity ^0.8.26;
+// 🛠️ Uses Solidity version 0.8.26 or later.
 
-// A contract to demonstrate different data locations: storage, memory, and calldata
+// 🧠 This contract teaches the difference between Solidity's data locations:
+// - storage = permanent, shared memory (filing cabinet)
+// - memory = temporary, modifiable workspace (whiteboard)
+// - calldata = read-only input from the user (clipboard)
 contract DataLocations {
-    uint256[] public arr; // A dynamic array stored in storage, publicly accessible
-    mapping(uint256 => address) map; // A mapping from uint256 to address stored in storage
+    // 🗃️ A public list of numbers stored permanently in the contract (filing cabinet)
+    uint256[] public arr;
 
-    // A struct to hold a single uint256 value
+    // 🗺️ A mapping of numbers to Ethereum addresses, also stored in storage
+    mapping(uint256 => address) map;
+
+    // 📦 A container to group related data (like a folder with a single note inside)
     struct MyStruct {
-        uint256 foo; // An integer property in the struct
+        uint256 foo; // 📝 The note in the folder – a single unsigned number
     }
 
-    // A mapping of uint256 to MyStruct, stored in storage
+    // 📁 Each folder is stored by ID (uint key) and lives in storage
     mapping(uint256 => MyStruct) myStructs;
 
-    // A public function demonstrating usage of storage, memory, and mappings
+    // 🔧 Demonstrates how to interact with storage and memory
     function f() public {
-        // Call the internal function `_f` with state variables (`arr`, `map`, and `myStructs[1]`)
+        // 🧩 Pass references to permanent data (from the filing cabinet) to an internal function
         _f(arr, map, myStructs[1]);
 
-        // Access a struct from the `myStructs` mapping in storage
+        // 📂 Create a local pointer to a specific folder in the cabinet
         MyStruct storage myStruct = myStructs[1];
 
-        // Create a new instance of `MyStruct` in memory with `foo` initialized to 0
+        // 🧽 Create a temporary version of that folder on a whiteboard to play with or modify locally
         MyStruct memory myMemStruct = MyStruct(0);
     }
 
-    // An internal function that takes references to storage variables as arguments
+    // 🔧 Internal-only function that receives references to storage data
     function _f(
-        uint256[] storage _arr, // A reference to a storage array
-        mapping(uint256 => address) storage _map, // A reference to a storage mapping
-        MyStruct storage _myStruct // A reference to a storage struct
+        uint256[] storage _arr,                      // 📚 Reference to the permanent number list
+        mapping(uint256 => address) storage _map,    // 🗺️ Reference to the permanent address map
+        MyStruct storage _myStruct                   // 📁 Reference to one folder
     ) internal {
-        // Perform operations with the storage variables (implementation not provided)
+        // 🧰 Could update or inspect the contents directly on-chain
+        // (No implementation provided here)
     }
 
-    // A public function that accepts an array in memory and returns a modified memory array
+    // 🧪 Function accepts a fresh copy of a number list for temporary use
     function g(uint256[] memory _arr) public returns (uint256[] memory) {
-        // Perform operations with the memory array (implementation not provided)
+        // 🧽 This is like writing on a whiteboard – temporary and can be changed
+        // (Implementation left out)
     }
 
-    // An external function that accepts an array in calldata (read-only, gas-efficient)
+    // 📬 External function that accepts a read-only input
     function h(uint256[] calldata _arr) external {
-        // Perform operations with the calldata array (implementation not provided)
+        // 📄 This is a clipboard handout – you can read it but can’t change it
+        // Efficient for external calls (no copying to memory)
+        // (Implementation left out)
     }
 }
