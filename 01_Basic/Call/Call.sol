@@ -1,59 +1,66 @@
-// SPDX-License-Identifier: MIT
+/ SPDX-License-Identifier: MIT
+// 🪪 License declaration—this contract is released under the permissive MIT license.
+
 pragma solidity ^0.8.26;
+// 🛠️ Compiler version lock to ensure compatibility and predictable behavior.
 
-// Contract to demonstrate receiving Ether and handling function calls
 contract Receiver {
-    // Event to log details of received calls
-    event Received(address caller, uint256 amount, string message);
+// 📥 Contract that listens for unknown calls and emits logs when called.
 
-    // Fallback function - triggered when:
-    // 1. Ether is sent with non-empty data and no matching function exists.
-    // 2. A non-existent function is called.
+    event Received(address caller, uint256 amount, string message);
+    // 📣 Event that logs the caller’s address, the amount of ETH sent, and a message string.
+
     fallback() external payable {
-        // Log the caller, amount of Ether sent, and a fallback-specific message
+        // 🧲 Fallback function—triggered when no matching function is found.
+
         emit Received(msg.sender, msg.value, "Fallback was called");
+        // 📢 Emits a log indicating the fallback function was triggered.
     }
 
-    // Function that accepts a message and a number, and can receive Ether
-    function foo(
-        string memory _message,
-        uint256 _x
-    ) public payable returns (uint256) {
-        // Log the caller, amount of Ether sent, and the custom message
+    function foo(string memory _message, uint256 _x)
+        public
+        payable
+        returns (uint256)
+    {
         emit Received(msg.sender, msg.value, _message);
+        // 📢 Emits a log with a custom message and ETH value.
 
-        // Return the input number incremented by 1
         return _x + 1;
+        // ➕ Returns the incremented value of `_x`.
     }
 }
 
-// Contract to demonstrate calling functions and sending Ether to another contract
 contract Caller {
-    // Event to log the success and data of a function call
+// ☎️ Contract that makes low-level calls to external contracts.
+
     event Response(bool success, bytes data);
+    // 📣 Event that logs whether the call succeeded and what data was returned.
 
-    // Function to call the `foo` function on the `Receiver` contract
+    // Let's imagine that contract Caller does not have the source code for the
+    // contract Receiver, but we do know the address of contract Receiver and the function to call.
     function testCallFoo(address payable _addr) public payable {
-        // Perform a low-level call to `foo(string,uint256)` on the `Receiver` contract
-        // Pass "call foo" as the string and 123 as the uint256
-        (bool success, bytes memory data) = _addr.call{
-            value: msg.value, // Send Ether from the Caller contract
-            gas: 5000
-        }(abi.encodeWithSignature("foo(string,uint256)", "call foo", 123)); // Specify a custom gas limit
+        // 🧪 Calls the `foo` function on the Receiver contract using low-level `call`.
 
-        // Log whether the call was successful and the returned data
+        (bool success, bytes memory data) = _addr.call{
+            value: msg.value,
+            gas: 5000
+        }(abi.encodeWithSignature("foo(string,uint256)", "call foo", 123));
+        // 🛰️ Sends ETH and gas with ABI-encoded input to `foo(string,uint256)`.
+
         emit Response(success, data);
+        // 📢 Logs whether the call succeeded and returns the raw data.
     }
 
-    // Function to call a non-existent function on the `Receiver` contract
+    // Calling a function that does not exist triggers the fallback function.
     function testCallDoesNotExist(address payable _addr) public payable {
-        // Perform a low-level call to a non-existent function `doesNotExist()`
-        // This triggers the fallback function on the `Receiver` contract
+        // 🧪 Attempts to call a nonexistent function to trigger Receiver’s fallback.
+
         (bool success, bytes memory data) = _addr.call{value: msg.value}(
             abi.encodeWithSignature("doesNotExist()")
         );
+        // 🚪 Low-level call with a signature that doesn't match any function.
 
-        // Log whether the call was successful and the returned data
         emit Response(success, data);
+        // 📢 Logs fallback activation and any returned data.
     }
 }
