@@ -1,77 +1,51 @@
-#### 1. START
+1. 🏗️ START building two contracts that demonstrate the difference between `call` and `delegatecall`.
 
----
+2. 🏷️ Name the first building:
+   DEFINE a contract called **"B"**
+   // This is the blueprint whose function logic is shared by others using `delegatecall`.
 
-#### 2. DEFINE a contract named `B`
+   a. 🧮 DECLARE public variable `num`
+   // A shared number slot.
 
-   a. DECLARE variables:
-      - `num` (unsigned integer, public): To store a number.
-      - `sender` (address, public): To store the caller's address.
-      - `value` (unsigned integer, public): To store the Ether sent.
+   b. 🧾 DECLARE public variable `sender`
+   // Tracks who triggered the call.
 
-   b. DEFINE a function `setVars`:
-      i. MARK the function as `public` and `payable`.
-      ii. ACCEPT one parameter:
-         - `_num` (unsigned integer): The value to update `num`.
-      iii. FUNCTION LOGIC:
-         - SET `num` to `_num`.
-         - SET `sender` to the caller's address (`msg.sender`).
-         - SET `value` to the Ether sent (`msg.value`).
+   c. 💰 DECLARE public variable `value`
+   // Records how much ETH was sent.
 
----
+   d. 🛠️ DEFINE function **setVars(uint256 \_num)** → public & payable
+   i. ✍️ SET `num = _num`
+   // Saves the number.
+   ii. ✍️ SET `sender = msg.sender`
+   // Saves the caller’s address.
+   iii. ✍️ SET `value = msg.value`
+   // Saves the amount of ETH sent.
 
-#### 3. DEFINE a contract named `A`
+3. 🏷️ Name the second building:
+   DEFINE a contract called **"A"**
+   // This is the caller that will either execute logic in B using its own storage or trigger B directly.
 
----
+   a. 🧮 DECLARE public variable `num`
+   b. 🧾 DECLARE public variable `sender`
+   c. 💰 DECLARE public variable `value`
+   // All three match B’s layout — required for `delegatecall` to avoid corruption.
 
-   ##### a. DECLARE variables:
-      - `num` (unsigned integer, public): To store a number.
-      - `sender` (address, public): To store the caller's address.
-      - `value` (unsigned integer, public): To store the Ether sent.
+   d. 📣 DECLARE event `DelegateResponse(success, data)`
+   // Emits the result of the `delegatecall`.
 
-   ##### b. DEFINE events:
-      - **`DelegateResponse`**:
-        i. PARAMETERS:
-           - `success` (boolean): Indicates the result of the `delegatecall`.
-           - `data` (bytes): Logs any returned data from the `delegatecall`.
+   e. 📣 DECLARE event `CallResponse(success, data)`
+   // Emits the result of the `call`.
 
-      - **`CallResponse`**:
-        i. PARAMETERS:
-           - `success` (boolean): Indicates the result of the `call`.
-           - `data` (bytes): Logs any returned data from the `call`.
+   f. 🪞 DEFINE function **setVarsDelegateCall(address \_contract, uint256 \_num)** → public & payable
+   i. ⚙️ ENCODE call to `setVars(_num)` using `abi.encodeWithSignature`
+   ii. 🔁 EXECUTE `delegatecall` to `_contract`
+   // Runs B’s logic but **writes into A’s** storage — B’s state remains untouched.
+   iii. 📢 EMIT `DelegateResponse(success, data)`
 
----
+   g. 📞 DEFINE function **setVarsCall(address \_contract, uint256 \_num)** → public & payable
+   i. ⚙️ ENCODE call to `setVars(_num)` using `abi.encodeWithSignature`
+   ii. 🛰️ EXECUTE `.call{value}` to `_contract`
+   // Runs B’s logic and **writes to B’s** storage — A’s state remains untouched.
+   iii. 📢 EMIT `CallResponse(success, data)`
 
-   ##### c. DEFINE a function `setVarsDelegateCall`:
-      i. MARK the function as `public` and `payable`.
-      ii. ACCEPT parameters:
-         - `contractAddress` (address): The target contract's address.
-         - `_num` (unsigned integer): The value to pass to the target contract.
-      iii. FUNCTION LOGIC:
-         - PERFORM a `delegatecall` to the `setVars` function in the target contract.
-         - USE `abi.encodeWithSignature` to encode the function signature and arguments.
-         - STORE the result in:
-            - `success` (boolean): Indicates if the `delegatecall` succeeded.
-            - `data` (bytes): Stores any data returned.
-         - EMIT the `DelegateResponse` event with `success` and `data`.
-
----
-
-   ##### d. DEFINE a function `setVarsCall`:
-      i. MARK the function as `public` and `payable`.
-      ii. ACCEPT parameters:
-         - `contractAddress` (address): The target contract's address.
-         - `_num` (unsigned integer): The value to pass to the target contract.
-      iii. FUNCTION LOGIC:
-         - PERFORM a `call` to the `setVars` function in the target contract.
-         - FORWARD the Ether sent using `{value: msg.value}`.
-         - USE `abi.encodeWithSignature` to encode the function signature and arguments.
-         - STORE the result in:
-            - `success` (boolean): Indicates if the `call` succeeded.
-            - `data` (bytes): Stores any data returned.
-         - EMIT the `CallResponse` event with `success` and `data`.
-
----
-
-#### 4. END
-
+4. 🏁 END setup for the delegatecall vs call experiment.
