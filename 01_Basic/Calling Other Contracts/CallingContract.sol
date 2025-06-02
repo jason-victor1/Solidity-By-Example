@@ -1,60 +1,71 @@
 // SPDX-License-Identifier: MIT
+// 🪪 License declaration—this contract is released under the MIT license.
+
 pragma solidity ^0.8.26;
+// 🛠️ Compiler version declaration to ensure compatibility and consistent behavior.
 
-// Define the `Callee` contract
 contract Callee {
-    // Public state variable to store an unsigned integer value
+// 🧾 Contract that receives function calls and optionally stores ETH sent with the transaction.
+
     uint256 public x;
+    // 🧮 Public state variable to store a number.
 
-    // Public state variable to store the Ether value received
     uint256 public value;
+    // 💰 Public state variable to store the ETH value received.
 
-    // Function to set the value of `x` and return the updated value
     function setX(uint256 _x) public returns (uint256) {
-        x = _x; // Update the state variable `x` with the provided value
-        return x; // Return the updated value of `x`
+        // 🔧 Sets the value of `x` and returns it.
+
+        x = _x;
+        // ✍️ Updates the stored number.
+
+        return x;
+        // 🔁 Returns the updated value.
     }
 
-    // Function to set `x` and record Ether sent to the contract
-    function setXandSendEther(
-        uint256 _x // Allows the function to accept Ether
-    ) public payable returns (uint256, uint256) {
-        x = _x; // Update the state variable `x`
-        value = msg.value; // Store the Ether sent with the transaction in `value`
+    function setXandSendEther(uint256 _x)
+        public
+        payable
+        returns (uint256, uint256)
+    {
+        // 🔧 Sets the value of `x`, stores ETH sent, and returns both values.
 
-        // Return the updated `x` and the received Ether value
+        x = _x;
+        // ✍️ Updates the stored number.
+
+        value = msg.value;
+        // 💰 Records the amount of ETH sent with the transaction.
+
         return (x, value);
+        // 🔁 Returns both the updated number and the received ETH value.
     }
 }
 
-// Define the `Caller` contract
 contract Caller {
-    // Function to call the `setX` function of a `Callee` contract instance
+// 📞 Contract that makes external calls to the Callee contract.
+
     function setX(Callee _callee, uint256 _x) public {
-        // Call the `setX` function of the provided `Callee` instance and update `x`
+        // 🔁 Calls the `setX` function on the given Callee contract instance.
+
         uint256 x = _callee.setX(_x);
-
-        // Note: The value of `x` is stored locally and not used further
+        // 📥 Passes `_x` and stores the returned result (not used here).
     }
 
-    // Function to call `setX` using the address of a `Callee` contract
     function setXFromAddress(address _addr, uint256 _x) public {
-        // Convert the address into a `Callee` contract instance
-        Callee callee = Callee(_addr);
+        // 🧭 Converts a raw address into a Callee contract reference and calls `setX`.
 
-        // Call the `setX` function of the `Callee` contract
+        Callee callee = Callee(_addr);
+        // 🔄 Typecasts the address into a Callee contract instance.
+
         callee.setX(_x);
+        // 📥 Calls the function using the casted instance.
     }
 
-    // Function to call `setXandSendEther` of a `Callee` contract instance
-    // and send Ether to it
     function setXandSendEther(Callee _callee, uint256 _x) public payable {
-        // Call the `setXandSendEther` function of the provided `Callee` instance
-        // `{value: msg.value}` sends the Ether sent with this transaction
-        (uint256 x, uint256 value) = _callee.setXandSendEther{value: msg.value}(
-            _x
-        );
+        // 💸 Calls `setXandSendEther` on Callee and sends ETH with the call.
 
-        // Note: The returned values (`x` and `value`) are stored locally and not used further
+        (uint256 x, uint256 value) =
+            _callee.setXandSendEther{value: msg.value}(_x);
+        // 🔁 Passes `_x` and forwards ETH—stores both returned values (not used here).
     }
 }

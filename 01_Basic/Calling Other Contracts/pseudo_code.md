@@ -1,31 +1,47 @@
-1. **START**
+1. 🏗️ START building a system to demonstrate contract-to-contract calls, ETH transfers, and return values.
 
-2. **DEFINE** a contract named `Callee`  
-   a. **DECLARE** a public unsigned integer variable `x` to store a value.  
-   b. **DECLARE** a public unsigned integer variable `value` to store the Ether received.  
-   c. **DEFINE** a function named `setX`:
-      i. TAKE a parameter `_x` of type `uint256`.  
-      ii. ASSIGN `_x` to the state variable `x`.  
-      iii. RETURN the updated value of `x`.  
-   d. **DEFINE** a payable function named `setXandSendEther`:
-      i. TAKE a parameter `_x` of type `uint256`.  
-      ii. ASSIGN `_x` to the state variable `x`.  
-      iii. ASSIGN `msg.value` to the state variable `value` (tracks the Ether sent).  
-      iv. RETURN a tuple containing the updated `x` and `value`.
+2. 🏷️ Name the first building:
+   DEFINE a contract called **"Callee"**
+   // This contract receives function calls and optionally stores ETH.
 
-3. **DEFINE** a contract named `Caller`  
-   a. **DEFINE** a function named `setX`:  
-      i. TAKE a parameter `_callee` of type `Callee` and `_x` of type `uint256`.  
-      ii. CALL the `setX` function of the provided `Callee` contract instance with `_x`.  
-      iii. STORE the returned value in a local variable `x`.  
-   b. **DEFINE** a function named `setXFromAddress`:  
-      i. TAKE a parameter `_addr` of type `address` and `_x` of type `uint256`.  
-      ii. CONVERT `_addr` into an instance of the `Callee` contract.  
-      iii. CALL the `setX` function of the `Callee` instance with `_x`.  
-   c. **DEFINE** a payable function named `setXandSendEther`:  
-      i. TAKE a parameter `_callee` of type `Callee` and `_x` of type `uint256`.  
-      ii. CALL the `setXandSendEther` function of the provided `Callee` contract instance.  
-      iii. PASS `{value: msg.value}` to transfer Ether sent with the transaction.  
-      iv. STORE the returned tuple (`x` and `value`) in local variables.  
+   a. 🧮 DECLARE public variable `x`
+   // Stores a number passed in by callers.
 
-4. **END**
+   b. 💰 DECLARE public variable `value`
+   // Stores the amount of ETH received during a call.
+
+   c. 🛠️ DEFINE function **setX(uint256 \_x)** → public → returns uint256
+   i. ✍️ SET `x = _x`
+   // Updates the stored number.
+   ii. 🔁 RETURN updated value of `x`
+
+   d. 🛠️ DEFINE function **setXandSendEther(uint256 \_x)** → public & payable
+   → returns `(uint256, uint256)`
+   i. ✍️ SET `x = _x`
+   // Store the number input.
+   ii. ✍️ SET `value = msg.value`
+   // Store the amount of ETH received.
+   iii. 🔁 RETURN `(x, value)`
+
+3. 🏷️ Name the second building:
+   DEFINE a contract called **"Caller"**
+   // This contract initiates interactions with the `Callee`.
+
+   a. 📞 DEFINE function **setX(Callee \_callee, uint256 \_x)** → public
+   i. CALL `_callee.setX(_x)` and store the result in `x`
+   // Passes a number to the target and retrieves the updated value.
+
+   b. 📞 DEFINE function **setXFromAddress(address \_addr, uint256 \_x)** → public
+   i. 🔄 CONVERT `_addr` into `Callee` contract instance
+   // Treats the address as if it were a Callee contract.
+   ii. CALL `setX(_x)` on the contract
+   // Executes the update remotely using an address instead of a typed reference.
+
+   c. 💸 DEFINE function **setXandSendEther(Callee \_callee, uint256 \_x)**
+   → public & payable
+   i. CALL `_callee.setXandSendEther(_x)` with attached ETH
+   // Sends both data and Ether to the callee.
+   ii. STORE returned values in `x` and `value`
+   // Captures the result of the update and ETH receipt.
+
+4. 🏁 END setup for contract-to-contract calling with and without ETH.
