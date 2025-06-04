@@ -1,79 +1,89 @@
 // SPDX-License-Identifier: MIT
-// Specifies the license under which the code is distributed.
+// 🪪 Open-source license declaration under the MIT license.
 
 pragma solidity ^0.8.26;
+// 🛠️ Compiler version specification for compatibility and safety.
 
-// Declares the Solidity compiler version, ensuring compatibility with 0.8.26 and higher minor versions.
-
-// External contract used for try/catch examples
+// External contract used for try / catch examples
 contract Foo {
-    // State variable to store the owner address
+// 📦 A contract with strict constructor requirements and a testable function for error handling demos.
+
     address public owner;
+    // 👤 Public variable to store the address of the owner.
 
-    // Constructor function to initialize the contract
     constructor(address _owner) {
-        // Require statement to ensure the owner address is not the zero address
+        // 🧱 Constructor that enforces input constraints before assigning ownership.
+
         require(_owner != address(0), "invalid address");
+        // ⚠️ Validates that the owner is not the zero address (commonly used to represent 'null').
 
-        // Assert statement to ensure the owner address is not a specific invalid address
         assert(_owner != 0x0000000000000000000000000000000000000001);
+        // 🧨 Fails hard if the owner is exactly the 0x01 address—used to demonstrate assert failure.
 
-        // Assign the provided owner address to the `owner` state variable
         owner = _owner;
+        // ✅ Sets the valid owner.
     }
 
-    // Function that demonstrates input validation using `require`
     function myFunc(uint256 x) public pure returns (string memory) {
-        // Ensure that the input `x` is not zero
-        require(x != 0, "require failed");
+        // 🛠️ Function that fails if input is zero, otherwise returns a success message.
 
-        // Return a success message
+        require(x != 0, "require failed");
+        // ⚠️ Reverts if input value is zero—used to demonstrate try/catch with require.
+
         return "my func was called";
+        // ✅ Returns confirmation string if the input was valid.
     }
 }
 
-// Contract that demonstrates the use of try/catch with external calls and contract creation
 contract Bar {
-    // Event for logging string messages
+// 🧪 Contract that demonstrates try/catch with both function calls and contract creation.
+
     event Log(string message);
+    // 📣 Event to log human-readable success or failure messages.
 
-    // Event for logging raw bytes (useful for debugging)
     event LogBytes(bytes data);
+    // 📦 Event to log low-level error data (typically from failed asserts).
 
-    // State variable to hold an instance of the `Foo` contract
     Foo public foo;
+    // 🔗 Public reference to an external Foo contract.
 
-    // Constructor function to initialize the `Bar` contract
     constructor() {
-        // Deploy a new `Foo` contract with the sender's address as the owner
+        // 🧱 Deploys a Foo contract upon construction and assigns it to the `foo` variable.
+
         foo = new Foo(msg.sender);
+        // 🚀 Initializes Foo with the sender's address to be used in try/catch examples.
     }
 
-    // Function to demonstrate try/catch with an external call
-    // Input `_i` is passed to the `myFunc` function of the `Foo` contract
+    // Example of try / catch with external call
+    // tryCatchExternalCall(0) => Log("external call failed")
+    // tryCatchExternalCall(1) => Log("my func was called")
     function tryCatchExternalCall(uint256 _i) public {
-        // Attempt to call `myFunc` on the `Foo` contract
+        // 🧪 Attempts to call Foo’s `myFunc` and catches errors if the call fails.
+
         try foo.myFunc(_i) returns (string memory result) {
-            // If successful, emit the returned result
+            // 🔄 If the call succeeds, emit the returned message.
             emit Log(result);
         } catch {
-            // If the call fails, emit a failure message
+            // ❌ If the call fails (e.g., require fails), emit a fallback error message.
             emit Log("external call failed");
         }
     }
 
-    // Function to demonstrate try/catch with contract creation
-    // Input `_owner` is the address used to initialize a new `Foo` contract
+    // Example of try / catch with contract creation
+    // tryCatchNewContract(0x0000000000000000000000000000000000000000) => Log("invalid address")
+    // tryCatchNewContract(0x0000000000000000000000000000000000000001) => LogBytes("")
+    // tryCatchNewContract(0x0000000000000000000000000000000000000002) => Log("Foo created")
     function tryCatchNewContract(address _owner) public {
-        // Attempt to create a new instance of the `Foo` contract
+        // 🧪 Tries to deploy a new Foo contract and catches failures from require and assert.
+
         try new Foo(_owner) returns (Foo foo) {
-            // If successful, emit a success message
+            // ✅ If the contract is successfully deployed, log confirmation.
             emit Log("Foo created");
         } catch Error(string memory reason) {
-            // Catch and handle failures caused by `require` or `revert`
+            // ⚠️ Catches revert and require failures, emitting the reason as a string.
             emit Log(reason);
         } catch (bytes memory reason) {
-            // Catch and handle failures caused by `assert`
+            // 🧨 Catches assert failures or low-level reverts and emits raw bytes.
             emit LogBytes(reason);
         }
     }
