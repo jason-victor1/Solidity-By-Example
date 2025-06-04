@@ -1,49 +1,60 @@
-1. START
+1. 🏗️ START building a system that demonstrates how to use `try/catch` for **external calls** and **contract creation**.
 
-2. DEFINE a contract named `Foo`
+2. 🏷️ DEFINE a contract called **"Foo"**
+   // An external contract with constructor checks and a function that may fail.
 
-3. DECLARE a public state variable `owner` of type `address`
+   a. 🧾 DECLARE public variable `owner` → address
+   // Stores the assigned owner of this contract.
 
-4. DEFINE a constructor for `Foo`
-   a. ACCEPT an `address` parameter `_owner`
-   b. VALIDATE `_owner` is not the zero address:
-      i. USE `require` with message: `"invalid address"`
-   c. VALIDATE `_owner` is not `0x0000000000000000000000000000000000000001`:
-      i. USE `assert` to enforce this condition
-   d. ASSIGN `_owner` to `owner`
+   b. 🧱 DEFINE constructor **Foo(address \_owner)**
+   i. ⚠️ REQUIRE `_owner != address(0)` → revert with `"invalid address"`
+   // Ensures the owner is not the zero address.
+   ii. 🧨 ASSERT `_owner != 0x...0001`
+   // Fails hard if the owner is exactly 0x01 — for demo purposes.
+   iii. ✅ SET `owner = _owner`
 
-5. DEFINE a function `myFunc`
-   a. MARK function as public and pure
-   b. ACCEPT an unsigned integer parameter `x`
-   c. VALIDATE `x` is not zero:
-      i. USE `require` with message: `"require failed"`
-   d. RETURN the string `"my func was called"`
+   c. 🛠️ DEFINE function **myFunc(uint256 x)** → public & pure → returns string
+   i. ⚠️ REQUIRE `x != 0` → revert with `"require failed"`
+   // Ensures the input is not zero.
+   ii. 🔁 RETURN `"my func was called"`
+   // Returns success message.
 
-6. DEFINE a contract named `Bar`
+3. 🏷️ DEFINE a contract called **"Bar"**
+   // A controller contract that demonstrates `try/catch` usage on both function calls and contract deployment.
 
-7. DECLARE an event `Log` to log string messages
+   a. 📣 DECLARE event `Log(string)`
+   // Used to emit readable messages.
 
-8. DECLARE an event `LogBytes` to log raw byte data
+   b. 📣 DECLARE event `LogBytes(bytes)`
+   // Used to emit low-level revert data (e.g. from `assert`).
 
-9. DECLARE a public state variable `foo` of type `Foo`
+   c. 🔗 DECLARE public variable `foo` of type `Foo`
+   // Stores a reference to an external Foo contract.
 
-10. DEFINE a constructor for `Bar`
-    a. INITIALIZE `foo` by deploying a new `Foo` contract
-       i. PASS `msg.sender` (deployer's address) as the `_owner`
+   d. 🔧 DEFINE constructor
+   i. 🚀 DEPLOY `Foo(msg.sender)` and store in `foo`
+   // Deploys Foo with current caller as the owner.
 
-11. DEFINE a function `tryCatchExternalCall`
-    a. MARK function as public
-    b. ACCEPT an unsigned integer parameter `_i`
-    c. TRY to call `myFunc` on the `Foo` contract with `_i`
-       i. IF successful, emit the returned result using the `Log` event
-       ii. IF the call fails, emit `"external call failed"` using the `Log` event
+4. 🔍 DEFINE function **tryCatchExternalCall(uint256 \_i)** → public
+   // Demonstrates `try/catch` when calling an external contract.
 
-12. DEFINE a function `tryCatchNewContract`
-    a. MARK function as public
-    b. ACCEPT an `address` parameter `_owner`
-    c. TRY to create a new `Foo` contract with `_owner`
-       i. IF successful, emit `"Foo created"` using the `Log` event
-       ii. IF the creation fails due to `require` or `revert`, emit the error message using the `Log` event
-       iii. IF the creation fails due to `assert`, emit the raw byte data using the `LogBytes` event
+   a. TRY calling `foo.myFunc(_i)`
+   i. IF success:
+   \- 🔁 RETURN string → emit `Log(result)`
+   ii. IF failure:
+   \- 📢 EMIT `Log("external call failed")`
+   // Catches failure like require(x != 0)
 
-13. END
+5. 🧪 DEFINE function **tryCatchNewContract(address \_owner)** → public
+   // Demonstrates `try/catch` for deploying a contract with risky constructor.
+
+   a. TRY `new Foo(_owner)`
+   i. IF success:
+   \- 📢 EMIT `Log("Foo created")`
+   ii. CATCH `Error(string reason)` → from `require()`
+   \- 📢 EMIT `Log(reason)`
+   iii. CATCH `bytes reason` → from `assert()`
+   \- 📦 EMIT `LogBytes(reason)`
+   // Captures lower-level byte error data.
+
+6. 🏁 END setup for external call and contract creation error handling using try/catch.
