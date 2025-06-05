@@ -1,38 +1,27 @@
-#### 1. **START**
+1. 🏗️ START setting up foundational elements: a struct, a global error, a global function, and a minimal contract.
 
----
+2. 🧱 DEFINE a `struct` called **Point**
+   // Think of this as a 2D coordinate with horizontal (x) and vertical (y) values.
 
-#### 2. **DEFINE** a `struct` named `Point`
+   a. 🧮 DECLARE `x` → uint256
+   // The x-coordinate.
 
-   a. DECLARE two unsigned integer variables:
-      - `x`: Represents the x-coordinate.
-      - `y`: Represents the y-coordinate.
+   b. 🧮 DECLARE `y` → uint256
+   // The y-coordinate.
 
----
+3. 🚫 DEFINE a custom global error called **Unauthorized(address caller)**
+   // Used to revert a transaction when a user is not allowed to perform an action.
 
-#### 3. **DEFINE** a custom error named `Unauthorized`
+4. ➕ DEFINE a **free function** called `add(uint256 x, uint256 y)` → pure → returns uint256
+   // This is a basic calculator function that adds two numbers.
 
-   a. INCLUDE one parameter:
-      - `caller` (address): The address of the unauthorized caller.
+   a. 🔁 RETURN `x + y`
+   // Outputs the sum of `x` and `y`.
 
----
+5. 🏷️ DEFINE a contract called **Foo**
+   // A simple contract with a public name label.
 
-#### 4. **DEFINE** a free function named `add`
+   a. 🏷️ DECLARE public variable `name` → string = "Foo"
+   // The name is fixed and visible to everyone.
 
-   a. MARK the function as `pure`.
-   b. ACCEPT two parameters:
-      - `x` (unsigned integer): The first input value.
-      - `y` (unsigned integer): The second input value.
-   c. RETURN the sum of `x` and `y`.
-
----
-
-#### 5. **DEFINE** a contract named `Foo`
-
-   a. DECLARE a public string variable `name`.
-      - INITIALIZE with the value `"Foo"`.
-
----
-
-#### 6. **END**
-
+6. 🏁 END setup for the utility function, error, struct, and minimal contract.
