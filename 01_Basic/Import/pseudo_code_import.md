@@ -1,29 +1,24 @@
-#### 1. **START**
+1. 🏗️ START building a contract that imports symbols from another Solidity file and interacts with an external contract.
 
----
+2. 📥 IMPORT `"./Foo.sol"`
+   // Brings in all public symbols from the Foo.sol file in the same directory.
 
-#### 2. **IMPORT** the `Foo.sol` contract
+3. 📥 IMPORT specific items from `"./Foo.sol"` with aliasing:
+   a. 🧱 `Unauthorized` → custom error
+   b. ➕ `add` function is imported as alias **`func`**
+   c. 📐 `Point` struct
 
-   a. IMPORT the entire contract `Foo` from the current directory.
-   b. IMPORT specific symbols from `Foo.sol`:
-      - `Unauthorized` (custom error).
-      - `add` (function) with alias `func`.
-      - `Point` (struct).
+   // This allows selective and renamed usage of specific features from `Foo.sol`.
 
----
+4. 🏷️ DEFINE a contract called **"Import"**
+   // This contract demonstrates symbol importing and Foo.sol interaction.
 
-#### 3. **DEFINE** a contract named `Import`
+   a. 🧩 CREATE a public variable `foo` initialized with a new `Foo()`
+   // Deploys an instance of the `Foo` contract and stores it for use.
 
-   ##### a. **DECLARE** a public state variable:
-   - `foo`: An instance of the `Foo` contract.
-   - INITIALIZE `foo` as a new instance of `Foo` during deployment.
+   b. 🪟 DEFINE function **getFooName()** → public view → returns string
+   i. CALL `foo.name()`
+   // Reads the public `name` value from the deployed Foo instance.
+   ii. 🔁 RETURN the name string
 
-   ##### b. **DEFINE** a function named `getFooName`:
-   - **Purpose**: Retrieve the `name` variable from the `Foo` contract.
-   - MARK the function as `public` and `view`.
-   - RETURN the value of `name` by calling `foo.name()`.
-
----
-
-#### 4. **END**
-
+5. 🏁 END setup for the import demonstration and external contract interaction.

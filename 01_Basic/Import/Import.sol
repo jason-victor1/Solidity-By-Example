@@ -1,24 +1,30 @@
 // SPDX-License-Identifier: MIT
+// 🪪 Open-source license declaration under the MIT license.
+
 pragma solidity ^0.8.26;
+// 🛠️ Specifies the Solidity compiler version for consistent behavior.
 
-// Import the Foo.sol contract from the current directory
+// import Foo.sol from current directory
 import "./Foo.sol";
+// 📥 Imports the full Foo contract and all its accessible components.
 
-// Import specific symbols from Foo.sol with optional aliasing
-// - `Unauthorized` is imported directly.
-// - `add` is imported with the alias `func`.
-// - `Point` struct is imported without modification.
+// import {symbol1 as alias, symbol2} from "filename";
 import {Unauthorized, add as func, Point} from "./Foo.sol";
+// 📥 Selectively imports:
+// 🚫 `Unauthorized` error for access control,
+// ➕ `add` function (renamed as `func`),
+// 📐 `Point` struct — all from Foo.sol
 
-// Define a contract named `Import`
 contract Import {
-    // Declare a public instance of the Foo contract
-    // This initializes a new Foo contract when `Import` is deployed
-    Foo public foo = new Foo();
+// 🧩 A contract that demonstrates usage of imported symbols from another file.
 
-    // Define a function to test the Foo contract
-    // Purpose: Retrieve the `name` variable from the Foo contract
+    Foo public foo = new Foo();
+    // 🔗 Instantiates the imported `Foo` contract and makes it publicly accessible.
+
     function getFooName() public view returns (string memory) {
-        return foo.name(); // Call the `name` getter from the Foo contract
+        // 🪟 View function that returns the name stored in the `Foo` contract.
+
+        return foo.name();
+        // 📤 Reads and returns the public `name` variable from `Foo`.
     }
 }

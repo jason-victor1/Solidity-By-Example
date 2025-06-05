@@ -1,33 +1,29 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26; // Specifies the Solidity version and licensing for the contract
+// 🪪 Open-source license declaration under the MIT license.
 
-// Define a struct named `Point`
-// A struct is a custom data type used to group related variables
+pragma solidity ^0.8.26;
+// 🛠️ Specifies the Solidity compiler version for compatibility and safety.
+
 struct Point {
-    uint256 x; // Represents the x-coordinate (unsigned integer)
-    uint256 y; // Represents the y-coordinate (unsigned integer)
-}
+    uint256 x;
+    // 📍 The horizontal coordinate.
 
-// Define a custom error named `Unauthorized`
-// Custom errors are cheaper than string-based revert messages
-// Parameters:
-// - `caller`: The address of the unauthorized caller
+    uint256 y;
+    // 📍 The vertical coordinate.
+}
+// 📐 A basic struct representing a 2D point with x and y coordinates.
+
 error Unauthorized(address caller);
+// 🚫 Custom error for access control—reverts when an unauthorized caller attempts an action.
 
-// Define a free function named `add`
-// Free functions are not part of any contract and can be called independently
-// Parameters:
-// - `x`: The first unsigned integer
-// - `y`: The second unsigned integer
-// Returns:
-// - The sum of `x` and `y`
 function add(uint256 x, uint256 y) pure returns (uint256) {
-    return x + y; // Adds `x` and `y` and returns the result
+    // ➕ A free function that returns the sum of two unsigned integers.
+
+    return x + y;
+    // 🔁 Returns the result of x + y.
 }
 
-// Define a contract named `Foo`
 contract Foo {
-    // Declare a public state variable `name` of type `string`
-    // The `public` keyword automatically generates a getter function for `name`
-    string public name = "Foo"; // Initializes `name` with the value "Foo"
+    string public name = "Foo";
+    // 🏷️ Publicly accessible string variable that stores the name of the contract.
 }
