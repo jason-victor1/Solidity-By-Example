@@ -1,74 +1,85 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-// Define an interface for the ERC20 standard
+//
+// 🎯 Interface Definition
+//
+
+/// @notice Minimal ERC-20 interface for use with abi.encode*() examples
 interface IERC20 {
-    // Function declaration for transferring tokens
-    // Parameters:
-    // - address: recipient of the tokens
-    // - uint256: amount of tokens to transfer
-    function transfer(address, uint256) external;
+    /// @notice Standard ERC-20 transfer function signature
+    /// @param to The recipient address
+    /// @param amount The amount of tokens to transfer
+    function transfer(address to, uint256 amount) external;
 }
 
-// Define a contract named `Token`
+//
+// 🧱 Dummy ERC-20 Contract
+//
+
+/// @notice Dummy contract that mimics an ERC-20 transfer method
 contract Token {
-    // Dummy implementation of the `transfer` function
-    // Does nothing in this case
+    /// @notice Dummy transfer implementation (empty body)
     function transfer(address, uint256) external {}
 }
 
-// Define a contract to demonstrate ABI encoding techniques
+//
+// 🧪 ABI Encoding & Calling Demonstration Contract
+//
+
 contract AbiEncode {
-    // A function to test a low-level call to another contract
-    // Parameters:
-    // - _contract: address of the target contract
-    // - data: raw bytes of encoded data to call the target contract
+    
+    /// @notice Executes a low-level call on an external contract with pre-encoded data
+    /// @dev Uses `.call(data)` to trigger the function call. Returns true if the call succeeded.
+    /// @param _contract The address of the target contract
+    /// @param data ABI-encoded calldata to send to the contract
     function test(address _contract, bytes calldata data) external {
-        // Perform a low-level call to the target contract with the provided data
-        (bool ok, ) = _contract.call(data);
-        // Revert the transaction if the call fails
+        // Low-level external call with ABI-encoded payload
+        (bool ok,) = _contract.call(data);
+
+        // Revert if call fails
         require(ok, "call failed");
     }
 
-    // A function to encode data using `abi.encodeWithSignature`
-    // Parameters:
-    // - to: recipient address
-    // - amount: number of tokens to transfer
-    // Returns: raw bytes of the encoded function call
-    function encodeWithSignature(
-        address to,
-        uint256 amount
-    ) external pure returns (bytes memory) {
-        // Encode the `transfer` function call with its signature and parameters
-        // Note: Typos in the signature are not checked by the compiler
+    /// @notice Encodes data using `abi.encodeWithSignature`
+    /// @dev Uses string-based signature, which is NOT checked at compile time. Typos can break encoding silently.
+    /// @param to Target address for the `transfer`
+    /// @param amount Token amount to transfer
+    /// @return ABI-encoded byte payload using the function signature
+    function encodeWithSignature(address to, uint256 amount)
+        external
+        pure
+        returns (bytes memory)
+    {
+        // ⛔ WARNING: "transfer(address,uint)" would compile, but silently produce an incorrect selector
         return abi.encodeWithSignature("transfer(address,uint256)", to, amount);
     }
 
-    // A function to encode data using `abi.encodeWithSelector`
-    // Parameters:
-    // - to: recipient address
-    // - amount: number of tokens to transfer
-    // Returns: raw bytes of the encoded function call
-    function encodeWithSelector(
-        address to,
-        uint256 amount
-    ) external pure returns (bytes memory) {
-        // Encode the `transfer` function call with its selector and parameters
-        // Note: The selector is the first 4 bytes of the Keccak256 hash of the function signature
+    /// @notice Encodes data using `abi.encodeWithSelector`
+    /// @dev Selector comes from interface definition. More type-safe than string-based version, but still prone to argument mismatch.
+    /// @param to Target address for the transfer
+    /// @param amount Amount to transfer
+    /// @return ABI-encoded byte payload using the function selector
+    function encodeWithSelector(address to, uint256 amount)
+        external
+        pure
+        returns (bytes memory)
+    {
+        // ✅ Better than signature strings — derives selector directly from interface
         return abi.encodeWithSelector(IERC20.transfer.selector, to, amount);
     }
 
-    // A function to encode data using `abi.encodeCall`
-    // Parameters:
-    // - to: recipient address
-    // - amount: number of tokens to transfer
-    // Returns: raw bytes of the encoded function call
-    function encodeCall(
-        address to,
-        uint256 amount
-    ) external pure returns (bytes memory) {
-        // Encode the `transfer` function call with type and argument validation
-        // Note: The compiler will check for typos and argument types
+    /// @notice Encodes data using `abi.encodeCall`
+    /// @dev ✅ Most type-safe method. Catches typos and mismatched parameter types at compile-time.
+    /// @param to Target address for the transfer
+    /// @param amount Amount to transfer
+    /// @return ABI-encoded byte payload with full compile-time checks
+    function encodeCall(address to, uint256 amount)
+        external
+        pure
+        returns (bytes memory)
+    {
+        // ✅ Compiler ensures function exists and argument types are correct
         return abi.encodeCall(IERC20.transfer, (to, amount));
     }
 }
