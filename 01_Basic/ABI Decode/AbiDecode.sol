@@ -1,42 +1,50 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-// Define a contract named `AbiDecode`
+/// @title AbiDecode - Demonstrates ABI encoding and decoding of structured data
 contract AbiDecode {
-    // Define a struct named `MyStruct` to group related data
+    
+    /// 🧱 Custom struct used for encoding/decoding
+    /// Represents a point of data with a name and fixed-size array
     struct MyStruct {
-        string name; // A string field to store a name
-        uint256[2] nums; // A fixed-size array of two unsigned integers
+        string name;           // A descriptive label or identifier
+        uint256[2] nums;       // A fixed-length array of two unsigned integers
     }
 
-    // Define a function named `encode` to encode multiple inputs into a single `bytes` object
+    /// 🔐 Encodes various parameters into a single `bytes` object
+    /// @param x A simple uint256 value
+    /// @param addr An Ethereum address
+    /// @param arr A dynamic array of unsigned integers
+    /// @param myStruct A user-defined struct with a string and array
+    /// @return Encoded bytes payload using ABI rules
     function encode(
-        uint256 x, // A uint256 value
-        address addr, // An Ethereum address
-        uint256[] calldata arr, // A dynamic array of uint256 values (calldata to save gas)
-        MyStruct calldata myStruct // A struct of type `MyStruct` (calldata for efficiency)
+        uint256 x,
+        address addr,
+        uint256[] calldata arr,
+        MyStruct calldata myStruct
     ) external pure returns (bytes memory) {
-        // Use `abi.encode` to encode all inputs into a single `bytes` object
+        // ABI-encode all the values into a single byte array
         return abi.encode(x, addr, arr, myStruct);
     }
 
-    // Define a function named `decode` to decode a `bytes` object back into its original data types
-    function decode(
-        bytes calldata data
-    )
+    /// 🔍 Decodes a byte-encoded payload back into original components
+    /// @param data The `bytes` payload to decode (must match format of `encode`)
+    /// @return x A uint256
+    /// @return addr An Ethereum address
+    /// @return arr A dynamic array of uint256
+    /// @return myStruct The decoded MyStruct object
+    function decode(bytes calldata data)
         external
         pure
         returns (
-            uint256 x, // A uint256 value
-            address addr, // An Ethereum address
-            uint256[] memory arr, // A dynamic array of uint256 values
-            MyStruct memory myStruct // A struct of type `MyStruct`
+            uint256 x,
+            address addr,
+            uint256[] memory arr,
+            MyStruct memory myStruct
         )
     {
-        // Decode the `bytes` object into its original data types using `abi.decode`
-        (x, addr, arr, myStruct) = abi.decode(
-            data,
-            (uint256, address, uint256[], MyStruct)
-        );
+        // Decode data assuming the exact order and types as used in encoding
+        (x, addr, arr, myStruct) =
+            abi.decode(data, (uint256, address, uint256[], MyStruct));
     }
 }
