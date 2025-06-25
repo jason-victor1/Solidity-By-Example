@@ -6,7 +6,6 @@ pragma solidity ^0.8.26;
 // Solidity version 0.8.26 ensures we're using a version that avoids bugs and supports new features.
 
 /// @title HelloWorld Smart Contract
-/// @author [Your Name]
 /// @notice A basic smart contract that stores and exposes a greeting message
 /// @dev Think of this as a digital building with a welcome sign that everyone can read, but no one can change.
 contract HelloWorld {

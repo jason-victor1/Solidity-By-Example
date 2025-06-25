@@ -6,26 +6,33 @@ pragma solidity ^0.8.26;
 // 🛠️ Specifies the version of the builder's toolkit (Solidity compiler) to use.
 // Version 0.8.26 ensures safety features like automatic underflow protection.
 
+/// @title Simple Scoreboard Counter
+/// @notice A digital scoreboard where anyone can increase or decrease the count
+/// @dev Demonstrates public state access and basic arithmetic with overflow protection
 contract Counter {
-    // 🧮 This is like a public scoreboard placed on the wall of a digital room.
-    // It keeps track of a number (like how many people entered or how many times something happened).
+    /// @notice The current score on the public digital scoreboard
+    /// @dev Acts like a wall-mounted counter visible to everyone
     uint256 public count;
 
-    // 🪟 A public window anyone can look through to see the current score.
-    // This function doesn’t change anything—it just returns the current value.
+    /// @notice Lets you peek at the current number on the scoreboard
+    /// @dev A read-only function that shows the current value without changing it
+    /// @return The number currently stored in the counter
     function get() public view returns (uint256) {
         return count;
+        // 🪟 This is like looking through a transparent window to see the scoreboard.
     }
 
-    // 🔼 This button increases the number on the scoreboard by 1.
-    // Anyone can press it to increment the counter.
+    /// @notice Increases the scoreboard number by 1
+    /// @dev This function increments the `count` variable with overflow safety (from Solidity 0.8+)
     function inc() public {
         count += 1;
+        // 🔼 Like pressing an "UP" button to increase the score on a tally counter.
     }
 
-    // 🔽 This button decreases the number on the scoreboard by 1.
-    // Solidity 0.8+ ensures it won't break by going below zero (no negative scores allowed).
+    /// @notice Decreases the scoreboard number by 1
+    /// @dev Decrements the `count`, ensuring no underflow (count can’t go below 0 in Solidity 0.8+)
     function dec() public {
         count -= 1;
+        // 🔽 Like pressing a "DOWN" button to reduce the count—no negative scores allowed.
     }
 }
