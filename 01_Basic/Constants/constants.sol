@@ -6,17 +6,15 @@ pragma solidity ^0.8.26;
 // 🛠️ Tells the builder (compiler) to use version 0.8.26 of the Solidity toolkit.
 // This ensures compatibility and includes safety features.
 
-// 🏢 You're now creating a digital building called "Constants" that has fixed plaques on its walls.
+/// @title Constants Example
+/// @notice Demonstrates how to define fixed values in Solidity that never change
+/// @dev Think of constants like engraved plaques or locked safes — once set, they cannot be changed
 contract Constants {
-    // 🔒 Constants = permanent plaques that are carved into the walls of the contract.
-    // They can never be changed once set. Saves gas and improves clarity.
+    /// @notice A constant Ethereum address, hard-coded and unchangeable
+    /// @dev 🪪 Think of this like a government-issued ID number that’s permanently stamped into the contract
+    address public constant MY_ADDRESS = 0x777788889999AaAAbBbbCcccddDdeeeEfFFfCcCc;
 
-    // 🪧 This is like an engraved sign showing a specific Ethereum address.
-    // It's public, always visible, and locked forever—like a dedication plaque.
-    address public constant MY_ADDRESS =
-        0x777788889999AaAAbBbbCcccddDdeeeEfFFfCcCc;
-
-    // 🔢 This is another permanent sign, showing a fixed number.
-    // Think of it like a commemorative number etched into the building.
+    /// @notice A constant number value
+    /// @dev 🔒 Like a sign in a store window that always says "Open at 9 AM" — it never changes, no matter what
     uint256 public constant MY_UINT = 123;
 }
