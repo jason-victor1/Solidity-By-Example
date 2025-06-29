@@ -5,23 +5,25 @@ pragma solidity ^0.8.26;
 // 🛠️ Sets the version of Solidity tools used to build this contract.
 // Version 0.8.26 includes important safety features.
 
-
-// 🏢 You're constructing a digital building named "Immutable".
-// Some labels (immutable variables) are installed once during setup and locked in permanently.
+/// @title Immutable Variables Example
+/// @notice Demonstrates how to use `immutable` in Solidity for values that are set once and never change afterward
+/// @dev 📌 Think of `immutable` like filling in your name on a form — once submitted, it's locked forever, but you can choose it initially
 contract Immutable {
-    // 🧱 This is like installing a nameplate at the entrance—set during construction and never changed after.
+    /// @notice Stores the address of the contract creator
+    /// @dev 🏷️ Like tagging a package with the sender's address — fixed when the box is sealed (constructor) and cannot be changed after
     address public immutable myAddr;
 
-    // 🏷️ This is like stamping a custom serial number into the foundation of the building.
+    /// @notice Stores a number provided during contract deployment
+    /// @dev 🔐 Similar to setting the lock combination once at setup — it can’t be changed later
     uint256 public immutable myUint;
 
-    // 🛬 This constructor runs once when the building is first assembled (contract is deployed).
-    // The deployer provides a number and becomes the permanent listed owner.
+    /// @notice Constructor to initialize the immutable variables
+    /// @param _myUint The number to be saved as a permanent value
     constructor(uint256 _myUint) {
-        // 👤 Assigns the deployer's address as the contract’s registered owner.
+        // 🧑 The deployer’s address is stored permanently
         myAddr = msg.sender;
 
-        // 🔢 Records the custom number chosen at deployment and locks it in.
+        // 🔢 The input value is recorded like setting the launch time for a rocket — no turning back after it's set
         myUint = _myUint;
     }
 }
