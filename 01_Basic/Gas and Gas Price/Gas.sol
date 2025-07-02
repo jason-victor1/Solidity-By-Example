@@ -4,24 +4,24 @@
 pragma solidity ^0.8.26;
 // 🛠️ Specifies the version of the Solidity compiler used for this contract.
 
-// 🏭 This contract is like a demo lab designed to explore what happens when you run out of fuel (gas) in Ethereum.
+/// @title Gas Burner Example
+/// @notice Demonstrates what happens when a smart contract consumes all gas
+/// @dev ⛽ This is like running your car engine nonstop until the fuel tank is completely empty and the car stops
 contract Gas {
-    // 🧮 This is a public wall-mounted counter.
-    // It tracks how many times a certain action has been attempted.
+    /// @notice A counter that keeps increasing endlessly
+    /// @dev 🧮 This is like a mechanical counter that keeps ticking up — forever
     uint256 public i = 0;
 
-    // 💥 This function demonstrates what happens when your machine (smart contract) runs non-stop without enough gas.
-    // ⚠️ Important: Once all gas is consumed, the transaction fails,
-    // all updates (like incrementing the counter) are rolled back,
-    // and the fuel (gas) you paid is permanently gone.
+    /// @notice Function that runs forever until it runs out of gas
+    /// @dev ⚠️ This is a "gas trap." It loops endlessly, increasing `i` until all gas is consumed
+    ///      When that happens:
+    ///      - 🚫 The transaction fails
+    ///      - 🔄 All changes to state are reverted (like hitting undo)
+    ///      - 💸 The gas you paid is still gone (not refunded)
     function forever() public {
-        // 🌀 This is like turning on a machine that keeps spinning endlessly,
-        // using up fuel (gas) until the engine stalls and shuts down.
+        // 🌀 This loop never ends — it's like a robot in an infinite loop of counting
         while (true) {
-            // 🔁 Each spin, the counter increases by 1—
-            // but none of these changes will stick if gas runs out mid-way.
             i += 1;
         }
     }
 }
-
