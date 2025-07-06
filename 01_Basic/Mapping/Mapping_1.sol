@@ -4,28 +4,34 @@
 pragma solidity ^0.8.26;
 // 🛠️ Specifies the version of the Solidity compiler—ensures compatibility and safety checks.
 
-// 🗃️ This contract is like a digital filing cabinet called "Mapping" where addresses are drawers and values are stored inside.
+/// @title Mapping Examples
+/// @notice Demonstrates how to use a simple mapping and a nested mapping in Solidity
+/// @dev 📓 Think of a mapping like a giant filing cabinet — you look up a key (like an address) to find its value
 contract Mapping {
-    // 🗂️ myMap is the cabinet.
-    // Each Ethereum address acts like a labeled drawer.
-    // Inside each drawer is a number (uint256).
+    /// @notice Maps an Ethereum address to a number
+    /// @dev 📁 Each address has its own folder where you can store a number
     mapping(address => uint256) public myMap;
 
-    // 🔍 This function lets anyone peek into a drawer using an address key.
-    // If nothing has been stored yet, it shows the default value—0.
+    /// @notice Get the number stored for a given address
+    /// @param _addr The address to look up
+    /// @return The number stored, or 0 if never set
     function get(address _addr) public view returns (uint256) {
+        // 📬 If no value was written yet, it returns the default (like finding an empty folder → 0)
         return myMap[_addr];
     }
 
-    // ✍️ This function lets someone place a number inside a specific drawer.
-    // It links the address to a new value, or updates an existing one.
+    /// @notice Set a number for a given address
+    /// @param _addr The address to update
+    /// @param _i The number to store
     function set(address _addr, uint256 _i) public {
+        // ✍️ Write a number into the folder for this address
         myMap[_addr] = _i;
     }
 
-    // 🧹 This function clears out the drawer (but doesn’t remove the drawer itself).
-    // The address still exists as a label, but now holds the default value: 0.
+    /// @notice Remove the number for a given address
+    /// @param _addr The address to reset
     function remove(address _addr) public {
+        // 🗑️ Reset the folder for this address to default (0)
         delete myMap[_addr];
     }
 }
