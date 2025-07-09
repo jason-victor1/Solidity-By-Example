@@ -4,68 +4,78 @@
 pragma solidity ^0.8.26;
 // 🛠️ Specifies the Solidity version used to compile the contract.
 
-// 🏢 This contract is a storage room filled with different kinds of shelves (arrays) for organizing numbers.
+/// @title Array Examples
+/// @notice Demonstrates how to use dynamic, fixed-size, and memory arrays in Solidity
+/// @dev 🗃️ Think of arrays like rows of boxes where you can store, remove, or peek at items
 contract Array {
-    // 📦 A dynamic shelf (array) named 'arr' that can expand or shrink.
+    /// @notice A dynamic array of unsigned integers
+    /// @dev 📦 A flexible row of boxes that grows and shrinks as needed
     uint256[] public arr;
 
-    // 📦 A pre-stocked dynamic shelf with three boxes: [1, 2, 3]
+    /// @notice A dynamic array initialized with three numbers
+    /// @dev 📦📦📦 Pre-filled row of boxes with [1, 2, 3]
     uint256[] public arr2 = [1, 2, 3];
 
-    // 🪵 A fixed-size shelf with 10 empty boxes (pre-built, can't grow or shrink)
+    /// @notice A fixed-size array of length 10
+    /// @dev 📏 Row of exactly 10 boxes, all starting at 0 and cannot grow/shrink
     uint256[10] public myFixedSizeArr;
 
-    // 🔍 Allows you to peek into the dynamic shelf and retrieve the box at position 'i'.
+    /// @notice Get the value at a specific index in `arr`
+    /// @param i The position in the array
+    /// @return The value stored at that position
     function get(uint256 i) public view returns (uint256) {
         return arr[i];
     }
 
-    // 📚 Returns a snapshot of the entire shelf `arr`—copied to memory.
-    // Note: Can be gas-intensive if the shelf has many items.
+    /// @notice Get the entire `arr` array
+    /// @return The full dynamic array
+    /// @dev ⚠️ Be cautious: returning large arrays can use a lot of gas
     function getArr() public view returns (uint256[] memory) {
         return arr;
     }
 
-    // ➕ Adds a new box to the end of the shelf.
+    /// @notice Add a new value to the end of `arr`
+    /// @param i The number to add
+    /// @dev ➕ Adds a new box at the end and puts the number in it
     function push(uint256 i) public {
         arr.push(i);
     }
 
-    // ➖ Removes the last box from the shelf.
+    /// @notice Remove the last value from `arr`
+    /// @dev ➖ Takes away the last box from the row
     function pop() public {
         arr.pop();
     }
 
-    // 📏 Tells you how many boxes are currently on the shelf.
+    /// @notice Get the current number of elements in `arr`
+    /// @return The length of the array
     function getLength() public view returns (uint256) {
         return arr.length;
     }
 
-    // ❌ Empties a box at a specific spot but keeps the shelf the same size.
-    // The slot at `index` is reset to zero (default value).
+    /// @notice Reset the value at a specific index to its default (0)
+    /// @param index The position in the array to reset
+    /// @dev 🧽 Clears the box but keeps the row the same length
     function remove(uint256 index) public {
         delete arr[index];
     }
 
-    // 🧪 A demonstration area showing temporary shelves and nested structures built in memory.
+    /// @notice Examples of creating arrays in memory
+    /// @dev 📝 Memory arrays are like scratch paper — temporary and gone after use
     function examples() external pure {
-        // 🛠️ Create a temporary worktable with 5 slots.
+        // 📝 Create a memory array with 5 boxes
         uint256 ;
 
-        // 📦 Create a 2D temporary shelf: `b` holds 2 inner shelves.
+        // 📝 Create a nested memory array (like two rows of boxes with 3 boxes each)
         uint256 ;
-
-        // 🧰 For each main slot in `b`, set up a sub-shelf with 3 boxes.
         for (uint256 i = 0; i < b.length; i++) {
             b ;
         }
 
-        // 🧱 Fill first sub-shelf with [1, 2, 3]
+        // 📋 Fill the boxes with values
         b[0][0] = 1;
         b[0][1] = 2;
         b[0][2] = 3;
-
-        // 🧱 Fill second sub-shelf with [4, 5, 6]
         b[1][0] = 4;
         b[1][1] = 5;
         b[1][2] = 6;

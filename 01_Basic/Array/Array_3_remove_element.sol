@@ -4,40 +4,40 @@
 pragma solidity ^0.8.26;
 // 🛠️ Specifies the version of the Solidity compiler to ensure compatibility and security.
 
-// 🏢 This contract is a smart storage room where you can quickly remove boxes from shelves by replacing them with the last one.
+/// @title Array Replace From End
+/// @notice Demonstrates a compact way to remove an element from an array by replacing it with the last element
+/// @dev 📦 Imagine a row of boxes on a shelf. To remove a box without sliding everything, you pick up the last box and put it in the removed box's spot — then throw away the now-empty last box.
 contract ArrayReplaceFromEnd {
-    // 📦 Dynamic shelf (array) holding numbered boxes (uint256).
+    /// @notice 📦 A dynamic row of boxes (array) where each box holds a number
     uint256[] public arr;
 
-    // ❌ This function removes a box at a given position by replacing it with the last box on the shelf.
-    // 💡 It's faster than shifting everything left—ideal when order doesn't matter.
+    /// @notice Removes the item at `index` by replacing it with the last box and then removing the last box
+    /// @param index The position of the box to remove
+    /// @dev 🪄 This method is more gas-efficient than shifting because it avoids moving all boxes to the left
     function remove(uint256 index) public {
-        // 🔄 Take the last box and use it to overwrite the one at 'index'.
+        /// 🔄 Move the last box into the spot of the box to remove
         arr[index] = arr[arr.length - 1];
-
-        // ✂️ Remove the last (now duplicated) box to keep the shelf clean.
+        /// 🗑️ Remove the now-duplicate last box
         arr.pop();
     }
 
-    // 🧪 A demo to show and test how this removal method works in practice.
+    /// @notice Test function that runs example scenarios and checks results
+    /// @dev 📋 Runs two scenarios: removing elements while keeping array compact
     function test() public {
-        // 🧰 Start with a shelf of 4 boxes labeled: [1, 2, 3, 4]
+        /// 🪜 Scenario 1: start with 4 boxes and remove the 2nd one
         arr = [1, 2, 3, 4];
 
-        // ❌ Remove the box at index 1 (value 2).
-        // 📦 Replace it with the last box (4), so it becomes: [1, 4, 3, 4]
-        // ✂️ Then cut off the duplicate last box → [1, 4, 3]
-        remove(1);
-        assert(arr.length == 3);  // Confirm one box was removed
-        assert(arr[0] == 1);      // Original first box still in place
-        assert(arr[1] == 4);      // Index 1 now holds what used to be at the end
-        assert(arr[2] == 3);      // Index 2 still has original value
+        remove(1); 
+        // Replaces `2` with `4`, expected array: [1, 4, 3]
+        assert(arr.length == 3);
+        assert(arr[0] == 1);
+        assert(arr[1] == 4);
+        assert(arr[2] == 3);
 
-        // ❌ Remove box at index 2 (which currently holds 3)
-        // Last box is also 3, so replacement makes no visible change
-        // ✂️ pop() trims the last item → shelf becomes: [1, 4]
+        /// 🪜 Scenario 2: remove the 3rd box (which is currently `3`)
         remove(2);
-        assert(arr.length == 2);  // Confirm another box was removed
+        // Replaces `3` with itself (`3` was last), expected array: [1, 4]
+        assert(arr.length == 2);
         assert(arr[0] == 1);
         assert(arr[1] == 4);
     }
