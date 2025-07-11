@@ -4,42 +4,44 @@
 pragma solidity ^0.8.26;
 // 🛠️ Uses Solidity version 0.8.26 to compile this contract.
 
-// 📦 This contract is a digital package tracker.
-// It attaches status tags to shipments and allows reading or updating those tags.
+/// @title Shipping Status Tracker
+/// @notice 🚚 Keeps track of the status of a shipment using an Enum (like a dropdown menu)
+/// @dev 📋 Internally, the enum is just a number: 0 = Pending, 1 = Shipped, etc.
 contract Enum {
-    // 🏷️ Define a tag menu (enum) called 'Status' with five possible labels for a package.
+    /// @notice 📋 A list of possible shipment states, like labels on a package.
     enum Status {
-        Pending,   // 🕓 0: Package is waiting to be shipped
-        Shipped,   // 📦 1: Package is on its way
-        Accepted,  // ✅ 2: Package was received
-        Rejected,  // ❌ 3: Delivery was refused
-        Canceled   // 🚫 4: Shipment was canceled
+        Pending,   // 📦 Waiting to ship (0)
+        Shipped,   // 🚀 In transit (1)
+        Accepted,  // 📬 Delivered and accepted (2)
+        Rejected,  // ❌ Delivered but rejected (3)
+        Canceled   // 🛑 Order canceled (4)
     }
 
-    // 🏷️ This variable holds the current tag for the package.
-    // It's public, so anyone can check the status.
-    // By default, this tag is set to 'Pending' (index 0).
+    /// @notice 📝 The current status of the shipment.
+    /// @dev Starts as `Pending` by default since it’s the first in the enum (0).
     Status public status;
 
-    // 🪟 Lets you peek at the current tag on the package.
-    // Although enums return names, under the hood they map to numbers (0–4).
+    /// @notice 🔍 Check the current shipping status
+    /// @return The current `Status` enum value (e.g., Pending, Shipped, etc.)
     function get() public view returns (Status) {
         return status;
     }
 
-    // ✍️ This function allows you to change the tag by picking a new one from the menu.
-    // You provide a new tag (`_status`) and it replaces the current one.
+    /// @notice 📦 Update the shipping status manually
+    /// @param _status The new `Status` value (use a number: 0=Pending, 1=Shipped, etc.)
+    /// @dev 🪄 You pass the numeric value or enum name to update it
     function set(Status _status) public {
         status = _status;
     }
 
-    // 🚫 A shortcut function that tags the package as 'Canceled'—no input needed.
+    /// @notice 🛑 Mark the shipment as canceled
+    /// @dev Shortcut to set `status` directly to `Canceled` (4)
     function cancel() public {
         status = Status.Canceled;
     }
 
-    // 🔄 This function removes the current tag and resets it to the default ('Pending').
-    // It's like wiping off a sticker and reapplying the "Waiting to Ship" label.
+    /// @notice 🔄 Reset the shipment back to the default state (`Pending`)
+    /// @dev Using `delete` resets the enum to its first value: 0
     function reset() public {
         delete status;
     }
