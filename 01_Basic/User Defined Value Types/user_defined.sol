@@ -4,56 +4,80 @@
 pragma solidity ^0.8.26;
 // 🛠️ Uses Solidity version 0.8.26 or later.
 
-// ⏱️ These are custom-labeled time components (user-defined value types).
-// Think of them as watch parts with labels that prevent accidental swaps.
-type Duration is uint64;    // Like a timer or countdown (battery life)
-type Timestamp is uint64;   // Like the moment the watch was set
-type Clock is uint128;      // A packed timepiece that includes both
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
 
-// 🛠️ LibClock = assembly-powered toolkit for assembling/disassembling a "Clock" from labeled parts.
+/// @notice 📄 Code adapted from Optimism repository:  
+/// https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts-bedrock/src/dispute/lib/LibUDT.sol
+
+/// @title User Defined Types for Time Tracking
+/// @dev These `type` definitions and `LibClock` library help pack & unpack duration and timestamp into a single 128-bit `Clock` value.
+/// Think of it like putting both the start time and the duration into a single 🗓️ calendar event.
+
+/// @notice ⏳ Duration — how long something takes
+type Duration is uint64;
+
+/// @notice 🕒 Timestamp — when something starts
+type Timestamp is uint64;
+
+/// @notice 🗓️ Clock — combines duration and timestamp in one packed variable
+type Clock is uint128;
+
+/// @title Library for working with `Clock`
+/// @notice 📦 Utility to pack (`wrap`) and unpack (`duration`, `timestamp`) a `Clock`
 library LibClock {
-    // 🧩 Combines a Duration and Timestamp into a 128-bit Clock.
-    // Duration occupies the high 64 bits, Timestamp the low 64 bits.
+    /// @notice Combines a `Duration` and a `Timestamp` into a single `Clock`.
+    /// @param _duration ⏳ How long the event lasts.
+    /// @param _timestamp 🕒 When the event starts.
+    /// @return clock_ 🗓️ Combined `Clock` representing both.
     function wrap(Duration _duration, Timestamp _timestamp)
         internal
         pure
         returns (Clock clock_)
     {
         assembly {
-            // Imagine putting the Duration on the left (high bits),
-            // and Timestamp on the right (low bits) of a single 128-bit box.
+            // 🧰 Pack into one number:
+            // [ 64 bits duration | 64 bits timestamp ]
             clock_ := or(shl(0x40, _duration), _timestamp)
         }
     }
 
-    // 🔍 Extracts the Duration (high 64 bits) from the packed Clock.
+    /// @notice Extracts the ⏳ `Duration` from a packed `Clock`.
+    /// @param _clock 🗓️ Packed clock.
+    /// @return duration_ ⏳ Duration.
     function duration(Clock _clock)
         internal
         pure
         returns (Duration duration_)
     {
         assembly {
-            // Shift right 64 bits to pull out the left-side (Duration)
+            // 👓 Shift right 64 bits to isolate duration
             duration_ := shr(0x40, _clock)
         }
     }
 
-    // 🔍 Extracts the Timestamp (low 64 bits) from the Clock.
+    /// @notice Extracts the 🕒 `Timestamp` from a packed `Clock`.
+    /// @param _clock 🗓️ Packed clock.
+    /// @return timestamp_ 🕒 Timestamp.
     function timestamp(Clock _clock)
         internal
         pure
         returns (Timestamp timestamp_)
     {
         assembly {
-            // Left shift to move Timestamp into position, then right shift to clean it out
+            // 👓 Mask out everything except the lowest 64 bits
             timestamp_ := shr(0xC0, shl(0xC0, _clock))
         }
     }
 }
 
-// 🛠️ LibClockBasic = Similar clock builder, but without type safety.
-// No labels → easy to mess up which value is which.
+/// @title Simpler Clock Library (No User Defined Types)
+/// @notice 🎒 Works with raw `uint64` instead of `Duration` and `Timestamp`
 library LibClockBasic {
+    /// @notice Combines `duration` and `timestamp` into `uint128`.
+    /// @param _duration ⏳
+    /// @param _timestamp 🕒
+    /// @return clock 🗓️
     function wrap(uint64 _duration, uint64 _timestamp)
         internal
         pure
@@ -65,34 +89,39 @@ library LibClockBasic {
     }
 }
 
-// 🧪 Examples = Playground showing how type safety with UDVTs helps prevent errors.
+/// @title Example Contract to Demonstrate Clock Usage
+/// @notice 📚 Examples with and without user-defined value types
 contract Examples {
+    /// @notice Example without User Defined Value Types
+    /// @dev Uses plain `uint64` and `uint128`, more error-prone.
     function example_no_uvdt() external view {
-        // 🛠️ Use raw values (no safety labels)
         uint128 clock;
         uint64 d = 1;
         uint64 t = uint64(block.timestamp);
 
-        // ✅ Compiles fine...
+        // ✅ Packs correctly
         clock = LibClockBasic.wrap(d, t);
-        // ❌ But this also compiles—even though the order is wrong!
-        clock = LibClockBasic.wrap(t, d);  // Bug-prone!
+
+        // 🚨 But you can accidentally swap the inputs and it still compiles
+        clock = LibClockBasic.wrap(t, d); 
     }
 
+    /// @notice Example with User Defined Value Types
+    /// @dev Safer and clearer by explicitly using `Duration` and `Timestamp`.
     function example_uvdt() external view {
-        // 🔖 Wrap values with labels (type safety)
-        Duration d = Duration.wrap(1);  // Clearly labeled as "duration"
-        Timestamp t = Timestamp.wrap(uint64(block.timestamp));  // Clearly labeled as "timestamp"
+        // Wrap raw values into meaningful types
+        Duration d = Duration.wrap(1);
+        Timestamp t = Timestamp.wrap(uint64(block.timestamp));
 
-        // 🔓 You can also unwrap to get raw numbers back
+        // Unwrap to primitive types if needed
         uint64 d_u64 = Duration.unwrap(d);
         uint64 t_u64 = Timestamp.unwrap(t);
 
-        // ✅ Assemble clock safely using labeled parts
-        Clock clock = Clock.wrap(0);
+        // ✅ Pack safely into a `Clock`
+        Clock clock = Clock.wrap(0); // initialize
         clock = LibClock.wrap(d, t);
 
-        // ❌ This will not compile due to mismatched types (prevents a bug!)
+        // 🚨 Swapping the order of inputs is not allowed & won't compile
         // clock = LibClock.wrap(t, d);
     }
 }
