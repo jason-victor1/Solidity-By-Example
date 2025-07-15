@@ -4,10 +4,15 @@
 pragma solidity ^0.8.26;
 // 🛠️ Specifies the Solidity compiler version used to compile this contract or struct.
 
-// 🗂️ This struct defines a template for a to-do item.
-// Think of it like a digital checklist form for a task.
-struct Todo {
-    string text;       // 📝 The description or label of the task (e.g., "Write proposal")
-    bool completed;    // ✅ Whether the task has been finished or not (true/false)
-}
+/// @title 📋 Todo Struct Declaration
+/// @author ✍️
+/// @notice This file defines a reusable `Todo` struct.
+/// @dev Typically imported into other contracts to define a task.
+/// 🗂️ Think of this as defining the shape of a sticky note that can be placed on a digital whiteboard.
 
+/// @notice 📝 Represents a single task on a to-do list.
+/// @dev Combines a text description of the task and its completion status.
+struct Todo {
+    string text;      /// 🗒️ The description of the task. Like the message written on a sticky note.
+    bool completed;   /// ✅ Whether the task has been completed. Checked (true) or unchecked (false).
+}

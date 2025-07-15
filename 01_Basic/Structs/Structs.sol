@@ -4,60 +4,66 @@
 pragma solidity ^0.8.26;
 // 🛠️ Ensures the contract uses Solidity version 0.8.26 or higher for safety and compatibility.
 
+/// @title 📋 Todo List Manager
+/// @author ✍️
+/// @notice A simple contract to manage a list of to-do tasks on the blockchain.
+/// @dev Demonstrates working with structs, arrays of structs, and updating data.
+/// 📦 Think of this as a digital whiteboard with sticky notes you can add, edit, and check off.
+
 contract Todos {
-    // 📋 Define the format of a task card using a struct.
-    // Each task (Todo) is a sticky note with a message and a checkbox.
+    /// @notice 📝 A single to-do item.
+    /// @dev Struct combining a description (`text`) and its completion status (`completed`).
     struct Todo {
-        string text;      // 📝 Task message or description (e.g., "Buy groceries")
-        bool completed;   // ✅ Checkbox: true if done, false if still pending
+        string text;      /// 🗒️ Task description.
+        bool completed;   /// ✅ Whether the task is done.
     }
 
-    // 📚 A stack (array) of task cards, representing the full to-do list.
-    // Public visibility auto-generates a getter for individual tasks by index.
+    /// @notice 📋 List of all the to-do items.
     Todo[] public todos;
 
-    // 🆕 Add a new task to the board.
-    // The caller provides the text, and the checkbox starts unchecked (false).
+    /// @notice ✍️ Add a new task to the list.
+    /// @dev Demonstrates 3 different ways to create and store a `Todo` struct.
+    /// @param _text 🗒️ Description of the task.
     function create(string calldata _text) public {
-        // ✍️ Method 1: Create a task directly with message and checkbox value.
+        // 🔹 Method 1: Initialize struct by calling it like a function.
         todos.push(Todo(_text, false));
 
-        // 🧾 Method 2: Same as above but more explicit with field names.
+        // 🔹 Method 2: Use key-value style (more explicit).
         todos.push(Todo({text: _text, completed: false}));
 
-        // 🛠️ Method 3: Create a blank task, write the text, leave checkbox as default (false).
+        // 🔹 Method 3: Create an empty sticky note and fill it in.
         Todo memory todo;
         todo.text = _text;
-        // `completed` is automatically false.
+        // `completed` defaults to false.
         todos.push(todo);
     }
 
-    // 🔍 View details of a specific task on the board.
-    // Though not necessary (public array gives access), this shows how to return multiple fields.
+    /// @notice 🔍 Read a specific task’s details.
+    /// @dev Solidity already gives you a getter for `todos`, but here we customize the return.
+    /// @param _index 📍 Index of the task in the list.
+    /// @return text 🗒️ Task description.
+    /// @return completed ✅ Whether the task is completed.
     function get(uint256 _index)
         public
         view
         returns (string memory text, bool completed)
     {
-        // 📦 Retrieve the task card from the board using its index.
         Todo storage todo = todos[_index];
         return (todo.text, todo.completed);
     }
 
-    // ✏️ Update the message on a task card.
+    /// @notice ✏️ Update the description of a task.
+    /// @param _index 📍 Index of the task to update.
+    /// @param _text 🗒️ New description text.
     function updateText(uint256 _index, string calldata _text) public {
-        // Access the target task on the board.
         Todo storage todo = todos[_index];
-        // Rewrite the note with new content.
         todo.text = _text;
     }
 
-    // ✅ Toggle the checkbox status for a task.
+    /// @notice 🔄 Toggle the completion status of a task.
+    /// @param _index 📍 Index of the task to toggle.
     function toggleCompleted(uint256 _index) public {
-        // Access the task card.
         Todo storage todo = todos[_index];
-        // Flip the checkbox: if it’s checked, uncheck it, and vice versa.
-        todo.completed = !todo.completed;
+        todo.completed = !todo.completed; // Switch true ↔ false
     }
 }
-
