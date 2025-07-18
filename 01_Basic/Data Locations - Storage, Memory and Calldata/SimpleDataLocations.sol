@@ -4,57 +4,63 @@
 pragma solidity ^0.8.26;
 // 🛠️ Uses Solidity version 0.8.26 or later.
 
-// 🧠 This contract teaches the difference between Solidity's data locations:
-// - storage = permanent, shared memory (filing cabinet)
-// - memory = temporary, modifiable workspace (whiteboard)
-// - calldata = read-only input from the user (clipboard)
+/// @title 📂 Data Locations Example
+/// @author ✍️
+/// @notice Demonstrates the difference between `storage`, `memory`, and `calldata` in Solidity.
+/// @dev Think of these as where you keep your data:  
+/// 🗃️ Storage = on the blockchain (permanent)  
+/// 🗒️ Memory = temporary workspace for the current function call  
+/// 📞 Calldata = read-only message that comes from the caller
+
 contract DataLocations {
-    // 🗃️ A public list of numbers stored permanently in the contract (filing cabinet)
+    /// @notice 🗃️ A dynamic array stored in storage — permanent & on-chain.
     uint256[] public arr;
 
-    // 🗺️ A mapping of numbers to Ethereum addresses, also stored in storage
+    /// @notice 🗃️ A mapping from `uint256` to `address`, also stored in storage.
     mapping(uint256 => address) map;
 
-    // 📦 A container to group related data (like a folder with a single note inside)
+    /// @notice Defines a simple struct with a single `foo` field.
     struct MyStruct {
-        uint256 foo; // 📝 The note in the folder – a single unsigned number
+        uint256 foo;
     }
 
-    // 📁 Each folder is stored by ID (uint key) and lives in storage
+    /// @notice 🗃️ A mapping from `uint256` to `MyStruct`, stored permanently.
     mapping(uint256 => MyStruct) myStructs;
 
-    // 🔧 Demonstrates how to interact with storage and memory
+    /// @notice Demonstrates how to access and pass around different data locations.
+    /// @dev Calls internal `_f()` with storage references, then creates storage & memory structs.
     function f() public {
-        // 🧩 Pass references to permanent data (from the filing cabinet) to an internal function
         _f(arr, map, myStructs[1]);
 
-        // 📂 Create a local pointer to a specific folder in the cabinet
+        /// 📋 Access a struct from storage (permanent record).
         MyStruct storage myStruct = myStructs[1];
 
-        // 🧽 Create a temporary version of that folder on a whiteboard to play with or modify locally
+        /// 📝 Create a struct in memory (scratch pad, goes away after function ends).
         MyStruct memory myMemStruct = MyStruct(0);
     }
 
-    // 🔧 Internal-only function that receives references to storage data
+    /// @notice Internal function receiving references to storage variables.
+    /// @param _arr 📋 Storage array reference.
+    /// @param _map 📋 Storage mapping reference.
+    /// @param _myStruct 📋 Storage struct reference.
     function _f(
-        uint256[] storage _arr,                      // 📚 Reference to the permanent number list
-        mapping(uint256 => address) storage _map,    // 🗺️ Reference to the permanent address map
-        MyStruct storage _myStruct                   // 📁 Reference to one folder
+        uint256[] storage _arr,
+        mapping(uint256 => address) storage _map,
+        MyStruct storage _myStruct
     ) internal {
-        // 🧰 Could update or inspect the contents directly on-chain
-        // (No implementation provided here)
+        // 🛠️ Do something with the storage variables.
     }
 
-    // 🧪 Function accepts a fresh copy of a number list for temporary use
+    /// @notice Demonstrates using and returning a memory array.
+    /// @param _arr 📝 A memory array, like a scratch pad.
+    /// @return The (possibly modified) memory array.
     function g(uint256[] memory _arr) public returns (uint256[] memory) {
-        // 🧽 This is like writing on a whiteboard – temporary and can be changed
-        // (Implementation left out)
+        // 🛠️ Work with memory array here.
     }
 
-    // 📬 External function that accepts a read-only input
+    /// @notice Demonstrates receiving a calldata array.
+    /// @param _arr 📞 Calldata array — read-only and gas efficient.
     function h(uint256[] calldata _arr) external {
-        // 📄 This is a clipboard handout – you can read it but can’t change it
-        // Efficient for external calls (no copying to memory)
-        // (Implementation left out)
+        // 🛠️ Work with calldata array here.
     }
 }
