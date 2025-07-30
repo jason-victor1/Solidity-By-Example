@@ -3,32 +3,28 @@
 
 pragma solidity ^0.8.26;
 
-// Specifies the Solidity compiler version. The code is compatible with version 0.8.26 and higher minor versions but not breaking changes (e.g., 0.9.0).
+/// @title 📣 Event Emission Example in Solidity
+/// @author ✍️
+/// @notice Demonstrates how to use events for logging data on the blockchain.
+/// @dev Events are like public announcements recorded in a logbook that smart contracts can’t read, but external systems can.
 
 contract Event {
-    // Declare the first event named `Log` with two parameters:
-    // - `sender`: Indexed, allows filtering logs by the sender's address.
-    // - `message`: A string that carries additional information.
+    /// @notice 📢 Announces a message from a sender.
+    /// @dev This event logs who sent it and what message they included. 
+    /// Indexed parameters (like `sender`) can be searched efficiently by external systems like The Graph or Etherscan.
+    /// @param sender 👤 The address of the user sending the message.
+    /// @param message 📝 A string message that describes what happened.
     event Log(address indexed sender, string message);
 
-    // Declare the second event named `AnotherLog` with no parameters.
-    // This event can be used as a simple signal without additional data.
+    /// @notice 🔔 A simple signal with no data.
+    /// @dev Can be used to indicate that something happened, like a light being turned on.
     event AnotherLog();
 
-    // Define a function named `test` that demonstrates emitting events.
+    /// @notice 🧪 Demonstrates emitting various events.
+    /// @dev Think of this as a person shouting different announcements that get written down in a public log.
     function test() public {
-        // Emit the `Log` event with:
-        // - The caller's address (`msg.sender`) as the sender.
-        // - The string "Hello World!" as the message.
-        emit Log(msg.sender, "Hello World!");
-
-        // Emit another `Log` event with:
-        // - The caller's address (`msg.sender`) as the sender.
-        // - The string "Hello EVM!" as the message.
-        emit Log(msg.sender, "Hello EVM!");
-
-        // Emit the `AnotherLog` event.
-        // No parameters are passed since the event does not require any data.
-        emit AnotherLog();
+        emit Log(msg.sender, "Hello World!");  // Like saying "Hi from me!"
+        emit Log(msg.sender, "Hello EVM!");    // Another message from the same sender
+        emit AnotherLog();                     // A generic bell ring saying "something happened"
     }
 }
