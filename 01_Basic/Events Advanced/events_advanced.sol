@@ -4,67 +4,90 @@
 pragma solidity ^0.8.14;
 // 🛠️ Solidity version 0.8.14 or higher
 
-// 📡 This contract represents a basic system that broadcasts events when transfers are initiated and confirmed.
+/// @title 📰 Event-Driven Architecture Example
+/// @author 
+/// @notice Demonstrates how smart contracts emit events and how other contracts subscribe to them.
+/// @dev This code covers both emission and reaction to on-chain events using interfaces.
+
+// -------------------------------------------
+// Event-Driven Logic Contract
+// -------------------------------------------
 contract EventDrivenArchitecture {
-    // 📢 Event triggered when a new transfer is started
-    event TransferInitiated(address indexed from, address indexed to, uint256 value);
+    /// @notice 📣 Emitted when a transfer is started
+    /// @param from 👤 The address initiating the transfer
+    /// @param to 🛋 The recipient of the transfer
+    /// @param value 💵 The amount being transferred
+    event TransferInitiated(
+        address indexed from, address indexed to, uint256 value
+    );
 
-    // ✅ Event triggered when a transfer is confirmed
-    event TransferConfirmed(address indexed from, address indexed to, uint256 value);
+    /// @notice 📅 Emitted when a transfer is confirmed
+    /// @param from 👤 The confirmer's address
+    /// @param to 🛋 Placeholder recipient (contract)
+    /// @param value 💵 Set to 0 in this context
+    event TransferConfirmed(
+        address indexed from, address indexed to, uint256 value
+    );
 
-    // 🧾 A registry to track which transfer IDs have already been confirmed
+    /// @dev Mapping to track confirmed transfers using a transfer ID
     mapping(bytes32 => bool) public transferConfirmations;
 
-    // 🚚 Function to begin a new transfer — like initiating a package shipment
+    /// @notice ⏰ Start a new transfer by logging it
+    /// @param to The address that will receive the transfer
+    /// @param value The amount to transfer
     function initiateTransfer(address to, uint256 value) public {
-        emit TransferInitiated(msg.sender, to, value); // 🔔 Broadcast that a transfer is starting
-        // ... (initiate logic could include locking tokens, etc.)
+        emit TransferInitiated(msg.sender, to, value);
+        // ... (additional logic to initiate the transfer)
     }
 
-    // ✅ Function to confirm a transfer by transfer ID — like confirming package delivery
+    /// @notice 🔢 Confirm a transfer using its ID
+    /// @param transferId A unique identifier for the transfer
     function confirmTransfer(bytes32 transferId) public {
-        // ❌ Prevent duplicate confirmations
-        require(!transferConfirmations[transferId], "Transfer already confirmed");
-
-        // 🧾 Mark this transfer ID as confirmed
+        require(
+            !transferConfirmations[transferId], "Transfer already confirmed"
+        );
         transferConfirmations[transferId] = true;
-
-        // 📣 Notify that the transfer is confirmed
         emit TransferConfirmed(msg.sender, address(this), 0);
-        // ... (actual confirmation logic could unlock funds, update status, etc.)
+        // ... (additional logic to confirm the transfer)
     }
 }
 
-// 🛎️ Interface for any external contract that wants to respond to transfer events
+// -------------------------------------------
+// Interface for Subscribers
+// -------------------------------------------
 interface IEventSubscriber {
-    // 🔁 A hook function that subscribers must implement to react to a transfer
-    function handleTransferEvent(address from, address to, uint256 value) external;
+    /// @notice Handler for when a transfer event occurs
+    /// @param from 👤 Sender address
+    /// @param to 🛋 Recipient address
+    /// @param value 💵 Amount transferred
+    function handleTransferEvent(address from, address to, uint256 value)
+        external;
 }
 
-// 📡 This contract lets people subscribe to updates and get notified when a transfer happens
+// -------------------------------------------
+// Event Subscription Manager
+// -------------------------------------------
 contract EventSubscription {
-    // 📢 Event triggered when a transfer occurs
+    /// @notice 🔔 Emitted whenever a transfer is triggered
+    /// @param from Sender of the value
+    /// @param to Recipient of the value
+    /// @param value Amount transferred
     event LogTransfer(address indexed from, address indexed to, uint256 value);
 
-    // 📋 Track whether someone is subscribed or not
     mapping(address => bool) public subscribers;
-
-    // 📦 List of all current subscribers
     address[] public subscriberList;
 
-    // ➕ Let a user join the notification list
+    /// @notice 📅 Subscribe to receive notifications
     function subscribe() public {
-        require(!subscribers[msg.sender], "Already subscribed"); // 🚫 Don't let people join twice
-        subscribers[msg.sender] = true; // ✅ Mark as subscribed
-        subscriberList.push(msg.sender); // 📥 Add to the list
+        require(!subscribers[msg.sender], "Already subscribed");
+        subscribers[msg.sender] = true;
+        subscriberList.push(msg.sender);
     }
 
-    // ➖ Let a user leave the notification list
+    /// @notice 📄 Unsubscribe from notifications
     function unsubscribe() public {
-        require(subscribers[msg.sender], "Not subscribed"); // 🚫 Can't leave if not in
-        subscribers[msg.sender] = false; // ❌ Mark as unsubscribed
-
-        // 🧹 Remove from the list efficiently by swapping with last and popping
+        require(subscribers[msg.sender], "Not subscribed");
+        subscribers[msg.sender] = false;
         for (uint256 i = 0; i < subscriberList.length; i++) {
             if (subscriberList[i] == msg.sender) {
                 subscriberList[i] = subscriberList[subscriberList.length - 1];
@@ -74,11 +97,11 @@ contract EventSubscription {
         }
     }
 
-    // 🚀 Trigger a transfer and notify all subscribers
+    /// @notice 🚀 Perform a transfer and notify subscribers
+    /// @param to The recipient address
+    /// @param value The amount to transfer
     function transfer(address to, uint256 value) public {
-        emit LogTransfer(msg.sender, to, value); // 🔔 Broadcast that a transfer happened
-
-        // 📲 Notify every subscriber by calling their custom event handler
+        emit LogTransfer(msg.sender, to, value);
         for (uint256 i = 0; i < subscriberList.length; i++) {
             IEventSubscriber(subscriberList[i]).handleTransferEvent(
                 msg.sender, to, value
