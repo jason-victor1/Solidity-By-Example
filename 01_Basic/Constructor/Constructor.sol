@@ -1,64 +1,49 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
+/// @title Multiple Inheritance Example with Constructors
+/// @notice Demonstrates how to pass parameters to base contracts and the order in which constructors are called.
+
 // Base contract X
 contract X {
-    string public name; // Public variable to store a name
+    /// @notice Public variable to hold the name passed to the constructor
+    string public name;
 
-    // Constructor to initialize the 'name' variable
+    /// @param _name The name to assign to this contract
     constructor(string memory _name) {
-        name = _name; // Assign the passed value to the 'name' variable
+        name = _name;
     }
 }
 
 // Base contract Y
 contract Y {
-    string public text; // Public variable to store a text
+    /// @notice Public variable to hold the text passed to the constructor
+    string public text;
 
-    // Constructor to initialize the 'text' variable
+    /// @param _text The text to assign to this contract
     constructor(string memory _text) {
-        text = _text; // Assign the passed value to the 'text' variable
+        text = _text;
     }
 }
 
-// There are 2 ways to initialize parent contracts with parameters.
+/// @dev Demonstrates inheritance with inline parameter passing to parent constructors
+/// @notice This contract inherits from X and Y, passing hardcoded values directly
+contract B is X("Input to X"), Y("Input to Y") {}
 
-// Method 1: Pass the parameters directly in the inheritance list.
-contract B is X("Input to X"), Y("Input to Y") {
-    // In this case, the parameters for X and Y are set during inheritance
-    // and cannot be modified later.
-}
-
-// Method 2: Pass the parameters in the child contract's constructor.
+/// @dev Demonstrates inheritance using constructor parameters
+/// @notice This contract passes parameters via its own constructor
 contract C is X, Y {
-    // Constructor of the child contract that takes parameters
-    // and passes them to the parent constructors explicitly.
     constructor(string memory _name, string memory _text) X(_name) Y(_text) {}
-    // This allows for more dynamic initialization at deployment.
 }
 
-// Note: Parent constructors are always executed in the order of inheritance.
-// The order in which you list parent contracts in the child's constructor
-// does not change this behavior.
-
-// Example: Parent constructors are called in the following order:
-// 1. X
-// 2. Y
-// 3. D
+/// @dev Demonstrates constructor call order
+/// @notice Constructor call order is based on inheritance order: X -> Y -> D
 contract D is X, Y {
-    // Constructor of the child contract initializes the parent contracts.
     constructor() X("X was called") Y("Y was called") {}
-    // Even though the parameters for X and Y are set here, the order
-    // of execution is determined by inheritance order (X, then Y).
 }
 
-// Example: Changing the order in the constructor does NOT change the execution order.
-// Parent constructors are still called in the order of inheritance:
-// 1. X
-// 2. Y
-// 3. E
+/// @dev Even if constructor order is changed, base constructors are called in declaration order
+/// @notice Constructor call order is still: X -> Y -> E
 contract E is X, Y {
     constructor() Y("Y was called") X("X was called") {}
-    // Despite Y being listed before X in this constructor,
-    // X's constructor will always be executed first due to inheritance order.
 }
