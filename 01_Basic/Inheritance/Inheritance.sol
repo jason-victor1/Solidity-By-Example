@@ -16,60 +16,82 @@ This graph shows the inheritance hierarchy where:
 - F inherits from A and B.
 */
 
+/**
+ * @title Contract A
+ * @dev Base contract with a virtual function `foo`.
+ * 🏛️ Think of this as a grandparent with a default message.
+ */
 contract A {
-    // Base contract A with a virtual function `foo`
+    /// @notice Returns the name of the contract as a string
+    /// @return The string "A"
     function foo() public pure virtual returns (string memory) {
-        return "A"; // Returns "A" when called
+        return "A";
     }
 }
 
-// Contracts inherit other contracts by using the keyword 'is'.
+/**
+ * @title Contract B
+ * @dev Inherits from A and overrides `foo`.
+ * 👨‍👦 B is a child of A and modifies the inherited behavior.
+ */
 contract B is A {
-    // Overrides the foo() function of contract A
+    /// @inheritdoc A
+    /// @return The string "B"
     function foo() public pure virtual override returns (string memory) {
-        return "B"; // Returns "B" when called
+        return "B";
     }
 }
 
+/**
+ * @title Contract C
+ * @dev Inherits from A and overrides `foo`.
+ * 👩‍👧 Another child of A, changing the message to "C".
+ */
 contract C is A {
-    // Overrides the foo() function of contract A
+    /// @inheritdoc A
+    /// @return The string "C"
     function foo() public pure virtual override returns (string memory) {
-        return "C"; // Returns "C" when called
+        return "C";
     }
 }
 
-// Contracts can inherit from multiple parent contracts.
-// When a function is called that is defined multiple times
-// in different contracts, Solidity uses C3 Linearization to
-// resolve the inheritance order.
-// Parent contracts are searched from right to left and in a depth-first manner.
-
+/**
+ * @title Contract D
+ * @dev Inherits from B and C. Uses the version of `foo()` from the right-most parent, C.
+ * 🧬 Demonstrates Solidity's right-to-left and depth-first inheritance resolution.
+ */
 contract D is B, C {
-    // Overrides the foo() function from both B and C
-    // D.foo() resolves to C's implementation of foo()
-    // because C is the rightmost parent in the inheritance list.
+    /// @notice Returns the overridden version of foo from C.
+    /// @inheritdoc B
+    /// @inheritdoc C
     function foo() public pure override(B, C) returns (string memory) {
-        return super.foo(); // Calls the foo() function of the most specific parent (C)
+        return super.foo(); // Returns "C"
     }
 }
 
+/**
+ * @title Contract E
+ * @dev Inherits from C and B. Uses the version of `foo()` from the right-most parent, B.
+ * 🔁 Same as D but switches the order to show how inheritance order matters.
+ */
 contract E is C, B {
-    // Overrides the foo() function from both C and B
-    // E.foo() resolves to B's implementation of foo()
-    // because B is the rightmost parent in the inheritance list.
+    /// @notice Returns the overridden version of foo from B.
+    /// @inheritdoc C
+    /// @inheritdoc B
     function foo() public pure override(C, B) returns (string memory) {
-        return super.foo(); // Calls the foo() function of the most specific parent (B)
+        return super.foo(); // Returns "B"
     }
 }
 
-// Inheritance must be ordered from “most base-like” to “most derived”.
-// If you swap the order of A and B in the inheritance list,
-// it will throw a compilation error because A is the base contract.
-
+/**
+ * @title Contract F
+ * @dev Demonstrates the correct inheritance order: most base-like to most derived.
+ * ❗ Reversing the order would cause a compilation error.
+ */
 contract F is A, B {
-    // Overrides the foo() function from both A and B
-    // F.foo() resolves to B's implementation of foo()
+    /// @inheritdoc A
+    /// @inheritdoc B
     function foo() public pure override(A, B) returns (string memory) {
-        return super.foo(); // Calls the foo() function of the most specific parent (B)
+        return super.foo(); // Returns "B"
     }
 }
