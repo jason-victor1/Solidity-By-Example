@@ -4,85 +4,121 @@
 pragma solidity ^0.8.26;
 // 🛠️ Specifies the Solidity compiler version—ensures compatibility and safety checks.
 
+/**
+ * @title Counter
+ * @dev A simple counter contract that increments a stored number.
+ * 📟 Think of this like a digital tally counter at a shop's entrance — each press increases the number.
+ */
 contract Counter {
-// 🧮 A simple counter contract that tracks a single public number.
-
+    /// @notice Current count value
     uint256 public count;
-    // 📟 Public scoreboard—anyone can view the current count.
 
+    /**
+     * @notice Increase the counter by 1
+     * 🖱 Like pressing the "add one" button on a counter device.
+     */
     function increment() external {
-        count += 1; 
-        // ➕ Increases the count by 1—can only be triggered externally.
+        count += 1;
     }
 }
 
+/**
+ * @title ICounter
+ * @dev Interface for interacting with any Counter-like contract.
+ * 🔌 Think of this like a remote control specification — it defines the buttons but doesn’t store the counter itself.
+ */
 interface ICounter {
-// 🧩 Interface to interact with any `Counter`-like contract remotely.
-
+    /// @notice Reads the current counter value
     function count() external view returns (uint256);
-    // 🔍 Lets external callers read the current count.
 
+    /// @notice Increments the counter by 1
     function increment() external;
-    // 🔘 Allows external contracts to increment the counter.
 }
 
+/**
+ * @title MyContract
+ * @dev Demonstrates calling another contract via its interface.
+ * 📞 Think of this as calling a friend's counter machine to increase their tally.
+ */
 contract MyContract {
-// 🤖 This contract acts as a remote controller for any Counter-compatible contract.
-
+    /**
+     * @notice Remotely increments another Counter contract.
+     * @param _counter Address of the counter contract.
+     * 🔍 Analogy: "Call the remote counter and press its increment button."
+     */
     function incrementCounter(address _counter) external {
-        ICounter(_counter).increment(); 
-        // 🔗 Calls the `increment()` function on another contract via its address.
+        ICounter(_counter).increment();
     }
 
+    /**
+     * @notice Reads the count from another Counter contract.
+     * @param _counter Address of the counter contract.
+     * @return Current count from that contract.
+     * 🔍 Analogy: "Call the remote counter and ask what number it's showing."
+     */
     function getCount(address _counter) external view returns (uint256) {
-        return ICounter(_counter).count(); 
-        // 🔎 Reads the `count` value from the specified counter contract.
+        return ICounter(_counter).count();
     }
 }
 
-// Uniswap example
-
+/**
+ * @title UniswapV2Factory
+ * @dev Interface for the Uniswap V2 Factory contract to get trading pairs.
+ * 🏭 Think of this as a directory that tells you where two tokens can be traded.
+ */
 interface UniswapV2Factory {
-// 🏗️ Interface for the Uniswap V2 Factory—used to get token pair addresses.
-
+    /**
+     * @notice Finds the trading pair contract for two tokens.
+     * @param tokenA Address of the first token.
+     * @param tokenB Address of the second token.
+     * @return pair Address of the pair contract.
+     */
     function getPair(address tokenA, address tokenB)
         external
         view
         returns (address pair);
-        // 🔁 Returns the pair contract address for the given two tokens.
 }
 
+/**
+ * @title UniswapV2Pair
+ * @dev Interface for a Uniswap V2 Pair contract to get reserves.
+ * 💰 Think of this like a storage room where you can ask how many of each token it holds.
+ */
 interface UniswapV2Pair {
-// 🧪 Interface for Uniswap token pairs—used to retrieve liquidity info.
-
+    /**
+     * @notice Gets the reserves of the two tokens in the pair.
+     * @return reserve0 Amount of token0.
+     * @return reserve1 Amount of token1.
+     * @return blockTimestampLast Last time reserves were updated.
+     */
     function getReserves()
         external
         view
         returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
-        // 💧 Returns the token reserves and last block timestamp.
 }
 
+/**
+ * @title UniswapExample
+ * @dev Demonstrates how to query token reserves from Uniswap V2.
+ * 🔍 Think of this like asking the Uniswap storehouse, "How many DAI and WETH do you have?"
+ */
 contract UniswapExample {
-// 🧾 Demonstrates how to retrieve liquidity pool reserves for a DAI/WETH pair on Uniswap.
-
+    /// @notice Address of the Uniswap V2 factory
     address private factory = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
-    // 🏭 Address of the Uniswap V2 Factory on Ethereum mainnet.
-
+    /// @notice Address of DAI token
     address private dai = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    // 💵 DAI token address.
-
+    /// @notice Address of WETH token
     address private weth = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    // 🪙 Wrapped Ether (WETH) token address.
 
+    /**
+     * @notice Retrieves the reserves of DAI and WETH from their Uniswap trading pair.
+     * @return DAI reserve and WETH reserve.
+     * 🛒 Analogy: "Go to the Uniswap warehouse, find the DAI-WETH section, and count how many of each they have."
+     */
     function getTokenReserves() external view returns (uint256, uint256) {
         address pair = UniswapV2Factory(factory).getPair(dai, weth);
-        // 🔗 Retrieves the DAI/WETH pair contract address from the factory.
-
         (uint256 reserve0, uint256 reserve1,) =
             UniswapV2Pair(pair).getReserves();
-        // 💧 Reads reserve balances for DAI and WETH from the pair contract.
-
         return (reserve0, reserve1);
-        // 📤 Returns the reserves to the external caller.
     }
 }
