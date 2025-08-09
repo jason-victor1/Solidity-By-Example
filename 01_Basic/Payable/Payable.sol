@@ -1,58 +1,59 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-// A contract to handle Ether deposits, withdrawals, and transfers
-// The contract has an owner and can store Ether
+/**
+ * @title Payable
+ * @dev Demonstrates how to send, receive, and withdraw Ether using payable functions and addresses.
+ * 💰 Think of this contract like a digital piggy bank that can accept, store, and send Ether.
+ */
 contract Payable {
-    // State variable to store the owner of the contract
-    // 'payable' allows the owner to receive Ether
+    /// @notice The owner of the contract who can receive withdrawals.
+    /// @dev Must be a payable address so Ether can be sent to it.
     address payable public owner;
 
-    // Constructor function that runs only once during deployment
-    // Marks the constructor as payable to accept Ether during contract deployment
+    /**
+     * @notice Constructor that sets the owner and can receive Ether upon deployment.
+     * @dev The `payable` keyword allows the contract to accept Ether during creation.
+     * 🏠 Analogy: Building the piggy bank and deciding who owns the key.
+     */
     constructor() payable {
-        // Assign the deployer's address as the owner of the contract
-        // Example: If account 0x5B3...eddC4 deploys the contract,
-        // it becomes the owner and is stored in the `owner` variable.
         owner = payable(msg.sender);
     }
 
-    // Function to deposit Ether into this contract
-    // The 'payable' modifier allows this function to accept Ether
-    // No additional logic is required; the contract balance updates automatically
-    // Example: Ether sent via this function is stored at the contract's address
-    // (e.g., 0x9D4...6254) and increases its balance.
+    /**
+     * @notice Deposits Ether into the contract.
+     * @dev The contract balance increases automatically.
+     * 🏦 Analogy: Putting coins into the piggy bank.
+     */
     function deposit() public payable {}
 
-    // Function that does not accept Ether
-    // If Ether is sent along with this function call, the transaction will fail
+    /**
+     * @notice A function that cannot accept Ether.
+     * @dev If you try to send Ether here, the transaction will fail.
+     * 🚫 Analogy: Trying to put money into a locked drawer — it won’t work.
+     */
     function notPayable() public {}
 
-    // Function to withdraw all Ether stored in this contract to the owner's address
+    /**
+     * @notice Withdraws all Ether stored in the contract to the owner.
+     * @dev Uses a low-level `call` to send Ether, and reverts if the transfer fails.
+     * 💸 Analogy: Emptying the piggy bank and giving all the money to the owner.
+     */
     function withdraw() public {
-        // Retrieve the current balance of the contract
         uint256 amount = address(this).balance;
 
-        // Use a low-level call to send the entire balance to the owner's address
-        // '(bool success,)' captures whether the transfer was successful
-        // Example: All Ether stored at the contract's address (e.g., 0x9D4...6254)
-        // is transferred to the owner's address (e.g., 0x5B3...eddC4).
-        (bool success, ) = owner.call{value: amount}("");
-
-        // Revert the transaction if the transfer fails
+        (bool success,) = owner.call{value: amount}("");
         require(success, "Failed to send Ether");
     }
 
-    // Function to transfer a specified amount of Ether from this contract to another address
-    // Parameters:
-    //  - _to: the recipient's address (must be payable to accept Ether)
-    //  - _amount: the amount of Ether to send (in wei)
-    // Example: Ether is sent from the contract's address (e.g., 0x9D4...6254) to the `_to` address.
+    /**
+     * @notice Transfers a specific amount of Ether from the contract to a given address.
+     * @param _to The recipient address (must be payable).
+     * @param _amount The amount of Ether to send (in wei).
+     * 📦 Analogy: Taking coins from the piggy bank and handing them to someone specific.
+     */
     function transfer(address payable _to, uint256 _amount) public {
-        // Perform a low-level call to send the specified amount of Ether to the recipient
-        (bool success, ) = _to.call{value: _amount}("");
-
-        // Revert the transaction if the transfer fails
+        (bool success,) = _to.call{value: _amount}("");
         require(success, "Failed to send Ether");
     }
 }
