@@ -4,79 +4,103 @@
 pragma solidity ^0.8.26;
 // 🛠️ Solidity compiler version lock—ensures consistent behavior across deployments.
 
-// TestFallbackInputOutput -> FallbackInputOutput -> Counter
-// 🔁 Contract chain showing interaction flow: test → fallback → target (Counter)
-
+/**
+ * @title FallbackInputOutput
+ * @dev Forwards any function call (and Ether) to a target contract and returns the result.
+ * 🏢 Analogy: This is like a **concierge desk** in a big office building.
+ *      - You give the concierge your request (calldata) and optional payment (Ether).
+ *      - The concierge delivers it to the right office (the target contract).
+ *      - Whatever response the office gives, the concierge brings it back to you exactly.
+ */
 contract FallbackInputOutput {
-// 🏢 Acts like a forwarding proxy that passes all calls to a target contract.
-
+    /// @notice Address of the target contract that will handle all forwarded calls.
     address immutable target;
-    // 🎯 Destination address that all fallback calls are routed to—set once during deployment.
 
+    /**
+     * @param _target The address of the contract to which all calls should be forwarded.
+     * 📦 Analogy: Telling the concierge which office to always deliver requests to.
+     */
     constructor(address _target) {
         target = _target;
-        // 🏷️ Stores the target contract address in the `target` variable.
     }
 
+    /**
+     * @notice Fallback function that captures any call with unknown function signatures
+     *         and forwards it (along with Ether) to the target contract.
+     * @param data Encoded function call data for the target contract.
+     * @return res The raw return data from the target contract.
+     * 📨 Analogy: You hand the concierge a sealed envelope (function data) with or without cash,
+     *      and they deliver it to the office without changing anything.
+     */
     fallback(bytes calldata data) external payable returns (bytes memory) {
-        // 📥 Fallback function—catches any calls that don’t match a defined function.
-
         (bool ok, bytes memory res) = target.call{value: msg.value}(data);
-        // 📨 Forwards the call and any Ether sent to the target contract using low-level `call`.
-
         require(ok, "call failed");
-        // ❌ Reverts the transaction if the call was unsuccessful.
-
         return res;
-        // 📤 Returns the raw data output from the target contract.
     }
 }
 
+/**
+ * @title Counter
+ * @dev Simple counter contract with getter and increment functions.
+ * 🔢 Analogy: A scoreboard with:
+ *      - One button to check the score.
+ *      - One button to increase the score by 1.
+ */
 contract Counter {
-// 🔢 Simple counter contract with get and increment functionality.
-
+    /// @notice The current count.
     uint256 public count;
-    // 🧮 Public state variable that tracks the current count.
 
+    /**
+     * @notice Get the current count.
+     * @return The current count value.
+     * 👀 Analogy: Looking at the scoreboard to see the current score.
+     */
     function get() external view returns (uint256) {
         return count;
-        // 🪟 View function that returns the current count value.
     }
 
+    /**
+     * @notice Increase the count by 1.
+     * @return The updated count after incrementing.
+     * 🔼 Analogy: Pressing the "plus one" button on the scoreboard.
+     */
     function inc() external returns (uint256) {
         count += 1;
-        // ➕ Increments the count by 1.
-
         return count;
-        // 🔁 Returns the updated count.
     }
 }
 
+/**
+ * @title TestFallbackInputOutput
+ * @dev Contract to test calls to FallbackInputOutput, including encoding call data.
+ * 🧪 Analogy: This is like a **remote control** that can send commands to the concierge desk.
+ */
 contract TestFallbackInputOutput {
-// 🧪 Test contract to simulate low-level calls through a fallback-enabled contract.
-
+    /// @notice Logs the raw return data from a fallback call.
     event Log(bytes res);
-    // 📣 Emits the raw response from the fallback call.
 
+    /**
+     * @notice Sends arbitrary call data to a FallbackInputOutput contract.
+     * @param _fallback The address of the FallbackInputOutput contract.
+     * @param data The encoded function call data to send.
+     * 📨 Analogy: Sending a custom instruction to the concierge and recording their reply.
+     */
     function test(address _fallback, bytes calldata data) external {
-        // 🧪 Sends a low-level call to a fallback-enabled contract with arbitrary data.
-
         (bool ok, bytes memory res) = _fallback.call(data);
-        // 🛰️ Calls the fallback contract directly with encoded data.
-
         require(ok, "call failed");
-        // ❌ Ensures the call was successful.
-
         emit Log(res);
-        // 📢 Emits the returned result as a `Log` event.
     }
 
-    function getTestData() external pure returns (bytes memory, bytes memory) {
-        // 🛠️ Prepares ABI-encoded call data for use in `test()`.
-
-        return
-            (abi.encodeCall(Counter.get, ()), abi.encodeCall(Counter.inc, ()));
-        // 🧬 Returns encoded data for calling `Counter.get()` and `Counter.inc()`.
+    /**
+     * @notice Provides example call data for Counter's get() and inc() functions.
+     * @return getData Encoded data for Counter.get().
+     * @return incData Encoded data for Counter.inc().
+     * 🛠 Analogy: A cheat sheet with ready-made envelopes you can hand to the concierge.
+     */
+    function getTestData() external pure returns (bytes memory getData, bytes memory incData) {
+        return (
+            abi.encodeCall(Counter.get, ()),
+            abi.encodeCall(Counter.inc, ())
+        );
     }
 }
-
